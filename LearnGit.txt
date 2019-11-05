@@ -3,4 +3,4 @@ Liu Xiaoyu created this file.
 2.在自己的仓库添加代码，push到自己的仓库
 3.提交pull request到团队项目，等待审核
 4.从团队项目pull request到自己项目，自己更新
-5.
+5.处理冲突
