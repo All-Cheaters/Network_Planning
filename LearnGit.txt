@@ -10,3 +10,4 @@ Liaaaan added this line.
 liudalao added
 
 function()
+function2()
