@@ -5,9 +5,12 @@ Liu Xiaoyu created this file.
 4.从团队项目pull request到自己项目，自己更新
 5.处理冲突
 
-bugfix
-Liaaaan added this line.
-liudalao added
+def bugFix():
+    """
+    @author: Yang
+    fix a bug that may cause Yang to pull wrong repository
+    """
+    pass
 
-function()
-function2()
+
+bugFix()
