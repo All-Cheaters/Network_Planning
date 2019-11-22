@@ -1,3 +1,4 @@
+from datetime import datetime
 class Link:
     def __init__(self):
         self.fromID = 0  # 边起点
@@ -107,11 +108,10 @@ class Graph:
     def __countLatestStartTime(self, hisID, projectDuration):  # ---------------------计算最迟开始---------------------
         # 工作的最迟开始时间=本工作的紧后工作的最迟开始时间（有多个时取最小值）-工作的持续时间
         hisPos = self.__IDToPos(hisID)
-        projectDurationTime = 44
         hisOutDegree = self.getOutDegree(hisID)
         if hisOutDegree == 0:  # 若出度为0,则最迟开始时间为 工期 - 持续时间
             self.knotList[hisPos].latest_start_time \
-                = projectDurationTime - self.getLastTime(hisID)
+                = projectDuration - self.getLastTime(hisID)
             return
         else:
             hisSufKnotList = self.getSufKnotID(hisID)
@@ -124,11 +124,10 @@ class Graph:
 
     def __countLatestFinishTime(self, hisID, projectDuration):  # ---------------------计算最迟结束---------------------
         # 工作的最迟完成时间=工作的最迟开始时间+工作的持续时间
-        projectDurationTime = 44
         hisPos = self.__IDToPos(hisID)
         hisOutDegree = self.getOutDegree(hisID)
         if hisOutDegree == 0:  # 若出度为0, 则最迟结束时间为工期
-            self.knotList[hisPos].latest_finish_time = projectDurationTime
+            self.knotList[hisPos].latest_finish_time = projectDuration
             return
         else:
             his_latest_start_time = self.getLatestStartTime(hisID)  # 最迟开始
@@ -179,19 +178,6 @@ class Graph:
             for knotID in topologicalList:
                 self.__countFreeTimeDifference(knotID)
                 self.__countTotalTimeDifference(knotID)
-
-    def getAllRelatedKnotID(self, _ID):  # 获得所有相邻点ID,返回列表
-        _pos = self.__IDToPos(_ID)
-        related_knotsID = self.pre_knotList[_pos] + self.suf_knotList[_pos]
-        return related_knotsID
-
-    def getPreKnotID(self, _ID):  # 获得所有前驱点ID,返回列表
-        _pos = self.__IDToPos(_ID)
-        return self.pre_knotList[_pos]
-
-    def getSufKnotID(self, _ID):  # 获得所有后继点ID,返回列表
-        _pos = self.__IDToPos(_ID)
-        return self.suf_knotList[_pos]
 
     def getInDegree(self, knotID):  # 获得某节点的入度,返回int
         knotPos = self.__IDToPos(knotID)
@@ -330,9 +316,14 @@ class Graph:
             knot.last_time = item['LT']
             knot.name = item['name']
             self.knotList.append(knot)
-            self.pre_knotList.append(item['pre'])
+            if item['pre'] == [0]:
+                self.pre_knotList.append([])
+            else:
+                self.pre_knotList.append(item['pre'])
             self.suf_knotList.append([])
             for preKnotID in item['pre']:
+                if item['pre'] == [0]:
+                    continue
                 link = Link()
                 link.fromID = preKnotID
                 link.toID = knot.ID
@@ -344,14 +335,33 @@ class Graph:
             self.suf_knotList[fromPos].append(toID)
         self.__count(projectDuration)
 
+    def getAllRelatedKnotID(self, _ID):  # 获得所有相邻点ID,返回列表
+        _pos = self.__IDToPos(_ID)
+        related_knotsID = self.pre_knotList[_pos] + self.suf_knotList[_pos]
+        return related_knotsID
+
+    def getPreKnotID(self, _ID):  # 获得所有前驱点ID,返回列表
+        _pos = self.__IDToPos(_ID)
+        return self.pre_knotList[_pos]
+
+    def getSufKnotID(self, _ID):  # 获得所有后继点ID,返回列表
+        _pos = self.__IDToPos(_ID)
+        return self.suf_knotList[_pos]
+
 
 class Project:  # 一个工程
     def __init__(self):
         self.graph = Graph()  # 一个工程的进度图
+        self.ID = 0
         self.name = 0
         self.startTime = 0  # 工程的开始时间
-        self.endTime = 44  # 工程的结束时间
-        self.duration = 44  # 工程工期
+        self.finishTime = 0  # 工程的结束时间
+        self.duration = 0  # 工程工期
 
     def readDataFromSQL(self, SQLData):
-        self.graph.readDataFromSQL(SQLData, self.duration)
+        self.ID = SQLData[0]['ID']
+        self.name = SQLData[0]['name']
+        self.startTime = datetime.strptime(SQLData[0]['startTime'], "%Y-%m-%d")
+        self.finishTime = datetime.strptime(SQLData[0]['finishTime'], "%Y-%m-%d")
+        self.duration = int((self.finishTime - self.startTime).days)
+        self.graph.readDataFromSQL(SQLData[1], self.duration)

@@ -19,10 +19,10 @@ class DBProject(db.Model):
     # DBItems = db.relationship('DBItem', backref='DBProject', lazy=True)
 
     def __repr__(self):
-        return str({'project_id': self.project_id,
-                    'project_name': self.project_name,
-                    'project_ST': self.project_ST,
-                    'project_FT': self.project_FT, })
+        return str({'ID': self.project_id,
+                    'name': self.project_name,
+                    'startTime': self.project_ST,
+                    'finishTime': self.project_FT, })
 
 
 class DBItem(db.Model):
@@ -33,13 +33,11 @@ class DBItem(db.Model):
     item_LT = db.Column(db.Integer)  # 持续时间
 
     # DBProject = db.Column(db.Integer, db.ForeignKey('DBProject.id'), nullable=False)
-
     def __repr__(self):
-        return str({'item_id': self.item_id,
-                    'item_name': self.item_name,
-                    'item_ST': self.item_pre,
-                    'item_FT': self.item_LT, }
-                   )
+        return str({'ID': self.item_id,
+                    'name': self.item_name,
+                    'pre': self.item_pre,
+                    'LT': self.item_LT, })
 
 
 class User(db.Model):

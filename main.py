@@ -1,3 +1,4 @@
+"""
 from CLASS import *
 
 if __name__ == '__main__':
@@ -14,3 +15,4 @@ if __name__ == '__main__':
     p = Project()
     p.readDataFromSQL(SQLData)
     p.graph.info()
+"""
