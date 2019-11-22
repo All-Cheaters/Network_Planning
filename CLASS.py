@@ -60,11 +60,14 @@ class Graph:
         return pos
 
     # ---------------------------------↓必看↓---------------------------------#
+    #                                                                        #
     #                 解释为什么要有pos:                                       #
     #                 pos是Knot在knotList中存储的坐标                          #
     #                 当只知道ID时并不能直接从knotList中读出该ID对应的节点信息    #
     #                 ID转换成pos,再使用knotList[pos]才能读出该节点信息          #
     #                 总结:函数接口()中都用ID,列表下标[]中都用pos                #
+    #                 IDToPos()和posToID()就是解决ID与pos不匹配用的             #
+    #                                                                         #
     # ---------------------------------↑必看↑---------------------------------#
 
     def posToID(self, _pos):  # pos转换到ID,返回int
@@ -73,34 +76,29 @@ class Graph:
 
     def getAllRelatedKnotID(self, _ID):  # 获得所有相邻点ID,返回列表
         _pos = self.IDToPos(_ID)
-        related_knotsID = []
-        for knotID in self.pre_knotList[_pos]:
-            related_knotsID.append(knotID)
-        for knotID in self.suf_knotList[_pos]:
-            related_knotsID.append(knotID)
+        related_knotsID = self.pre_knotList[_pos] + self.suf_knotList[_pos]
         return related_knotsID
 
-    def getPreKnotID(self, _ID):  # 获得所有后继点ID,返回列表
+    def getPreKnotID(self, _ID):  # 获得所有前驱点ID,返回列表
         _pos = self.IDToPos(_ID)
-        related_knotsID = []
-        for knotID in self.suf_knotList[_pos]:
-            related_knotsID.append(knotID)
-        return related_knotsID
+        return self.pre_knotList[_pos]
 
-    def getSufKnotID(self, _ID):  # 获得所有前驱点ID,返回列表
+    def getSufKnotID(self, _ID):  # 获得所有后继点ID,返回列表
         _pos = self.IDToPos(_ID)
-        related_knotsID = []
-        for knotID in self.pre_knotList[_pos]:
-            related_knotsID.append(knotID)
-        return related_knotsID
+        return self.suf_knotList[_pos]
 
     def getInDegree(self, knotID):  # 获得某节点的入度,返回int
-        inDegree = len(self.getPreKnotID(knotID))
+        knotPos = self.IDToPos(knotID)
+        inDegree = len(self.pre_knotList[knotPos])
         return inDegree
 
     def getOutDegree(self, knotID):  # 获得某节点的出度,返回int
-        outDegree = len(self.getSufKnotID(knotID))
+        knotPos = self.IDToPos(knotID)
+        outDegree = len(self.suf_knotList[knotPos])
         return outDegree
+
+    def getKnotNum(self):  # 返回节点数量
+        return len(self.knotList)
 
     def inputData(self):  # 输入数据
         print("------↓输入节点↓------退出:q--------\n")  # 点集
@@ -153,11 +151,62 @@ class Graph:
                 print(sufKnotID, end='\t')  # print所有后继点
             print('\n')
 
-    def readDataFromSQL(self):  # 在数据库中读取数
-        pass
+    def readDataFromSQL(self, SQLData):  # 在数据库中读取数
+        # 预计一个item的格式为
+        # {'ID': 1 , 'LT' : 5 , 'name' : superSon , 'pre' : [1,2,3,4] }
+        itemList = SQLData
+        initLinkList = []
+        for item in itemList:
+            knot = Knot()
+            knot.ID = item['ID']
+            knot.LT = item['LT']
+            knot.name = item['name']
+            self.knotList.append(knot)
+            self.pre_knotList.append(item['pre'])
+            self.suf_knotList.append([])
+            for preKnotID in item['pre']:
+                link = Link()
+                link.fromID = preKnotID
+                link.toID = knot.ID
+                initLinkList.append(link)
+        for link in initLinkList:
+            fromID = link.fromID
+            fromPos = self.IDToPos(fromID)
+            toID = link.toID
+            self.suf_knotList[fromPos].append(toID)
 
     def topologicalSorting(self):  # 拓扑排序
-        pass
+        outPutList = []  # 输出的ID
+        inDegreeList = []
+        zeroInDegreeKnotNum = 0  # 入度为0节点的个数
+        knotNum = self.getKnotNum()
+        for pos in range(knotNum):
+            ID = self.posToID(pos)
+            inDegree = self.getInDegree(ID)
+            inDegreeList.append(inDegree)  # inDegreeList入度列表初始化
+        while zeroInDegreeKnotNum < knotNum:
+            pos = -1
+            for inDegree in inDegreeList:
+                pos += 1
+                if inDegree == 0:  # 若入度为0
+                    inDegreeList[pos] = -1  # 表示该点已入栈了
+                    ID = self.posToID(pos)  # 入度为0的节点的id号
+                    outPutList.append(ID)  # 入度为0时候入栈
+                    zeroInDegreeKnotNum += 1
+                    # 入栈之后所有以该点为前驱的点入度 -1
+                    for knotID in self.suf_knotList[pos]:  # 该入度为0的点的所有后继点ID
+                        knotPos = self.IDToPos(knotID)
+                        inDegreeList[knotPos] -= 1
+                else:
+                    continue
+        return outPutList
 
     def count(self):  # 由拓扑结构和lastTime计算每个节点的其余数值
         pass
+
+
+class Project:  # 一个工程
+    def __init__(self):
+        self.graph = Graph()  # 一个工程的进度图
+        self.StartTime = 0  # 工程的开始时间
+        self.EndTime = 100  # 工程的结束时间
