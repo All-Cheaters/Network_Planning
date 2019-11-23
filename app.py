@@ -36,7 +36,7 @@ def submit_item():
             if item_pre_list is not []:
                 for pre in item_pre_list:
                     if pre != 'Value':
-                        item_pre += str(int(pre[:2]))
+                        item_pre += pre
                         item_pre += ','
             item_pre = '0' if (item_pre == '') else item_pre[:-1]
             item_LT = item_values_list[3]
@@ -83,13 +83,11 @@ def TranslateToSQLData():  # 只能读一个项目
         itemList.append(itemDict)
     for itemPos in range(len(itemList)):
         itemDict = itemList[itemPos]
-        IDList = str.split((itemDict['pre']), sep=',')
+        IDList = str.split((itemDict['pre']), sep=',')  # 得到的是['01:A','02:B','03:C']
         for pos in range(len(IDList)):
-            IDList[pos] = int(IDList[pos])
+            IDList[pos] = int(IDList[pos][:2])
         itemList[itemPos]['pre'] = IDList
     return projectsDict, itemList
-
-
 
 
 if __name__ == '__main__':
@@ -104,7 +102,7 @@ if __name__ == '__main__':
     # db.drop_all()
     # 创建数据库表单
     # db.create_all()
-    # app.run(port=5000, debug=True)
+    #app.run(port=5000, debug=True)
     p = Project()
     SQLData = TranslateToSQLData()
     p.readDataFromSQL(SQLData)
