@@ -1,3 +1,4 @@
+from CLASS import *
 from DBconfig import *
 from ItemForm import ProjectForm, MainForm
 
@@ -12,7 +13,6 @@ def submit_item():
     form_one = ProjectForm()
     form_two = MainForm()
     if request.method == 'POST':
-
         # project数据库对象存储
         project_id = 1
         project_name = form_one.project_name.data
@@ -24,26 +24,21 @@ def submit_item():
                                project_FT=project_FT)
         print(db_project)
         db.session.add(db_project)
-
         # item数据库对象存储
         item_id = 1
         for item in form_two.items.data:
             item_dict = dict(item)  # 每个item是一个dict类型，但是不能用dict的方法，需要先转换成dict类型的变量
-            item_keys_list = list(item_dict.keys())  # 字典中的键列表
             item_values_list = list(item_dict.values())  # 字典中的值列表
-            print(item_keys_list)
-            print(item_values_list)
             item_name = item_values_list[1]
-
             # item类的前置事件获取
             item_pre_list = item_values_list[2]
             item_pre = ''
-            if item_pre_list is not None:
+            if item_pre_list is not []:
                 for pre in item_pre_list:
-                    item_pre += pre
-                    item_pre += ','
-            item_pre = 'null' if (item_pre == '') else item_pre[:-1]
-
+                    if pre != 'Value':
+                        item_pre += pre
+                        item_pre += ','
+            item_pre = '0' if (item_pre == '') else item_pre[:-1]
             item_LT = item_values_list[3]
             db_item = DBItem(item_id=item_id,
                              item_name=item_name,
@@ -52,7 +47,6 @@ def submit_item():
             print(db_item)
             item_id += 1
             db.session.add(db_item)
-
         # 数据库提交
         try:
             db.session.commit()
@@ -71,7 +65,29 @@ def view():
     print(projects)
     # # 在这里把两个列表传进函数里进行调试操作，比如：
     # # function(items,project)...
+    # TranslateToSQLData()
     return render_template('view.html', items=items)
+
+
+def TranslateToSQLData():  # 只能读一个项目
+    projects = DBProject.query.filter().all()
+    projectList = []
+    projectsDict = {}
+    items = DBItem.query.filter().all()
+    itemList = []
+    for statement in projects:
+        projectsDict = eval(str(statement))
+        projectList.append(projectsDict)
+    for statement in items:
+        itemDict = eval(str(statement))
+        itemList.append(itemDict)
+    for itemPos in range(len(itemList)):
+        itemDict = itemList[itemPos]
+        IDList = str.split((itemDict['pre']), sep=',')  # 得到的是['01:A','02:B','03:C']
+        for pos in range(len(IDList)):
+            IDList[pos] = int(IDList[pos][:2])
+        itemList[itemPos]['pre'] = IDList
+    return projectsDict, itemList
 
 
 if __name__ == '__main__':
@@ -83,10 +99,13 @@ if __name__ == '__main__':
     '''
 
     # 在创建数据库表单之前要先删除表单
-    db.drop_all()
+    # db.drop_all()
     # 创建数据库表单
-    db.create_all()
-
+    # db.create_all()
+    #app.run(port=5000, debug=True)
+    p = Project()
+    SQLData = TranslateToSQLData()
+    p.readDataFromSQL(SQLData)
+    p.graph.info()
     # # 通过view()函数在控制台打印数据库数据，不用管报错，这是最后一行往前端传数据的错，回头再解决
     # view()
-    app.run(port=5000, debug=True)
