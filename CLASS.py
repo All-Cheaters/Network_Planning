@@ -1,4 +1,6 @@
 from datetime import datetime
+
+
 class Link:
     def __init__(self):
         self.fromID = 0  # 边起点
@@ -245,6 +247,54 @@ class Graph:
             if not changed:  # 一次循环下来若零度节点数未变,说明有环出现
                 return None
         return outPutList
+
+    def getCoordinates(self, canvasSize=[800, 600]):
+        """计算每项工作在图中的坐标
+        @:return: 一个dict,键为ID,值为坐标[x, y]"""
+        if canvasSize is None:
+            canvasSize = [800, 600]
+        coordinates = {}  # 输出的坐标字典
+        knotsGroupByXCoord = []  # 将点按横坐标分类，横坐标相同的点构成一个list
+        inDegreeList = []  # 初始化入度列表
+        zeroInDegreeNum = 0
+        knotNum = self.getKnotNum()
+        for pos in range(knotNum):
+            ID = self.__posToID(pos)
+            inDegree = self.getInDegree(ID)
+            inDegreeList.append(inDegree)
+        while zeroInDegreeNum < knotNum:
+            changed = False
+            pos = -1
+            knotsWithSameXCoord = []  # 储存横坐标相同的点
+            for inDegree in inDegreeList:
+                pos += 1
+                if inDegree == 0:
+                    inDegreeList[pos] = -1
+                    ID = self.__posToID(pos)
+                    knotsWithSameXCoord.append(ID)
+                    zeroInDegreeNum += 1
+                    changed = True
+            knotsGroupByXCoord.append(knotsWithSameXCoord)
+            for knotID in knotsWithSameXCoord:
+                knotPos = self.__IDToPos(knotID)
+                for sufKnotID in self.suf_knotList[knotPos]:
+                    sufKnotPos = self.__IDToPos(sufKnotID)
+                    inDegreeList[sufKnotPos] -= 1
+            if not changed:
+                raise TypeError('This graph contains a circle.')
+        colsNum = len(knotsGroupByXCoord)
+        maxColLength = max(len(col) for col in knotsGroupByXCoord)
+        unitXLength = canvasSize[0] // (colsNum + 1)
+        unitYLength = canvasSize[1] // (2 * maxColLength)
+        for cols in range(colsNum):
+            yCoord = (maxColLength - len(knotsGroupByXCoord[cols]) - 1) * unitYLength
+            for ID in knotsGroupByXCoord[cols]:
+                coordinates[ID] = []
+                xCoord = (cols + 1) * unitXLength
+                yCoord += 2 * unitYLength
+                coordinates[ID].append(xCoord)
+                coordinates[ID].append(yCoord)
+        return coordinates
 
     def inputData(self):  # 输入数据
         print("------↓输入节点↓------退出:q--------\n")  # 点集
