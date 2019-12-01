@@ -102,10 +102,11 @@ if __name__ == '__main__':
     # db.drop_all()
     # 创建数据库表单
     # db.create_all()
-    #app.run(port=5000, debug=True)
+    # app.run(port=5000, debug=True)
     p = Project()
     SQLData = TranslateToSQLData()
     p.readDataFromSQL(SQLData)
+    p.graph.calculateCoordinates([800, 300])
     p.graph.info()
-    # # 通过view()函数在控制台打印数据库数据，不用管报错，这是最后一行往前端传数据的错，回头再解决
+    # 通过view()函数在控制台打印数据库数据，不用管报错，这是最后一行往前端传数据的错，回头再解决
     # view()
