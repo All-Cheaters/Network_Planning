@@ -33,6 +33,12 @@ class Knot:
         self.total_time_difference = 0
         # 总时差=该工作最迟完成时间
         # =该工作最早完成时间/该工作最迟开始时间-该工作最早开始时间
+        self.xcor = 0
+        # 节点横坐标
+        self.ycor = 0
+        # 节点纵坐标
+        self.is_key = False
+        # 是否为关键节点
 
 
 class Graph:
@@ -47,10 +53,6 @@ class Graph:
         # 每个节点(v)的后继点列表 (二维列表)
         # suf_knotList每个元素是一个list
         # list中包含v的所有后继点ID号
-        '''
-        self.linkList = []
-        # 边集列表,每个元素是一个Link (好像也没啥用)
-        '''
 
     def __IDToPos(self, _ID):  # ID转换到pos,返回int
         pos = -1
@@ -153,6 +155,8 @@ class Graph:
             his_free_time_difference = \
                 min(EarliestStartTimeList) - self.getEarliestFinishTime(hisID)
             self.knotList[hisPos].free_time_difference = his_free_time_difference
+        if self.knotList[self.__IDToPos(hisID)].free_time_difference == 0:
+            self.knotList[self.__IDToPos(hisID)].is_key = True
 
     def __countTotalTimeDifference(self, hisID):  # ---------------------计算总时差---------------------
         # 总时差=该工作最迟完成时间-该工作最早完成时间
@@ -181,17 +185,69 @@ class Graph:
                 self.__countFreeTimeDifference(knotID)
                 self.__countTotalTimeDifference(knotID)
 
+    def calculateCoordinates(self, canvasSize):
+        knotsGroupByXCoord = []  # 将点按横坐标分类，横坐标相同的点构成一个list
+        inDegreeList = []  # 初始化入度列表
+        zeroInDegreeNum = 0
+        knotNum = self.getKnotNum()
+        for pos in range(knotNum):
+            ID = self.__posToID(pos)
+            inDegree = self.getInDegree(ID)
+            inDegreeList.append(inDegree)
+        while zeroInDegreeNum < knotNum:
+            changed = False
+            pos = -1
+            knotsWithSameXCoord = []  # 储存横坐标相同的点
+            for inDegree in inDegreeList:
+                pos += 1
+                if inDegree == 0:
+                    inDegreeList[pos] = -1
+                    ID = self.__posToID(pos)
+                    knotsWithSameXCoord.append(ID)
+                    zeroInDegreeNum += 1
+                    changed = True
+            knotsGroupByXCoord.append(knotsWithSameXCoord)
+            for knotID in knotsWithSameXCoord:
+                knotPos = self.__IDToPos(knotID)
+                for sufKnotID in self.suf_knotList[knotPos]:
+                    sufKnotPos = self.__IDToPos(sufKnotID)
+                    inDegreeList[sufKnotPos] -= 1
+            if not changed:
+                raise TypeError('This graph contains a circle.')
+        colsNum = len(knotsGroupByXCoord)
+        maxColLength = max(len(col) for col in knotsGroupByXCoord)
+        unitXLength = canvasSize[0] // (colsNum + 1)
+        unitYLength = canvasSize[1] // (maxColLength + 1)
+        for cols in range(colsNum):
+            yCoord = (maxColLength - len(knotsGroupByXCoord[cols]) - 1) * unitYLength
+            for ID in knotsGroupByXCoord[cols]:
+                xCoord = (cols + 1) * unitXLength
+                yCoord += 2 * unitYLength
+                self.knotList[self.__IDToPos(ID)].xcor = xCoord
+                self.knotList[self.__IDToPos(ID)].ycor = yCoord
+
     def getInDegree(self, knotID):  # 获得某节点的入度,返回int
+        """
+        :param knotID: 节点ID
+        :return: 该ID对应的节点入度
+        """
         knotPos = self.__IDToPos(knotID)
         inDegree = len(self.pre_knotList[knotPos])
         return inDegree
 
     def getOutDegree(self, knotID):  # 获得某节点的出度,返回int
+        """
+        :param knotID: 节点ID
+        :return: 该ID对应的节点入度
+        """
         knotPos = self.__IDToPos(knotID)
         outDegree = len(self.suf_knotList[knotPos])
         return outDegree
 
     def getKnotNum(self):  # 返回节点数量,返回int
+        """
+        :return:
+        """
         return len(self.knotList)
 
     def getLastTime(self, hisID):  # 获得持续时间,返回int
@@ -247,54 +303,6 @@ class Graph:
             if not changed:  # 一次循环下来若零度节点数未变,说明有环出现
                 return None
         return outPutList
-
-    def getCoordinates(self, canvasSize=[800, 600]):
-        """计算每项工作在图中的坐标
-        @:return: 一个dict,键为ID,值为坐标[x, y]"""
-        if canvasSize is None:
-            canvasSize = [800, 600]
-        coordinates = {}  # 输出的坐标字典
-        knotsGroupByXCoord = []  # 将点按横坐标分类，横坐标相同的点构成一个list
-        inDegreeList = []  # 初始化入度列表
-        zeroInDegreeNum = 0
-        knotNum = self.getKnotNum()
-        for pos in range(knotNum):
-            ID = self.__posToID(pos)
-            inDegree = self.getInDegree(ID)
-            inDegreeList.append(inDegree)
-        while zeroInDegreeNum < knotNum:
-            changed = False
-            pos = -1
-            knotsWithSameXCoord = []  # 储存横坐标相同的点
-            for inDegree in inDegreeList:
-                pos += 1
-                if inDegree == 0:
-                    inDegreeList[pos] = -1
-                    ID = self.__posToID(pos)
-                    knotsWithSameXCoord.append(ID)
-                    zeroInDegreeNum += 1
-                    changed = True
-            knotsGroupByXCoord.append(knotsWithSameXCoord)
-            for knotID in knotsWithSameXCoord:
-                knotPos = self.__IDToPos(knotID)
-                for sufKnotID in self.suf_knotList[knotPos]:
-                    sufKnotPos = self.__IDToPos(sufKnotID)
-                    inDegreeList[sufKnotPos] -= 1
-            if not changed:
-                raise TypeError('This graph contains a circle.')
-        colsNum = len(knotsGroupByXCoord)
-        maxColLength = max(len(col) for col in knotsGroupByXCoord)
-        unitXLength = canvasSize[0] // (colsNum + 1)
-        unitYLength = canvasSize[1] // (2 * maxColLength)
-        for cols in range(colsNum):
-            yCoord = (maxColLength - len(knotsGroupByXCoord[cols]) - 1) * unitYLength
-            for ID in knotsGroupByXCoord[cols]:
-                coordinates[ID] = []
-                xCoord = (cols + 1) * unitXLength
-                yCoord += 2 * unitYLength
-                coordinates[ID].append(xCoord)
-                coordinates[ID].append(yCoord)
-        return coordinates
 
     def inputData(self):  # 输入数据
         print("------↓输入节点↓------退出:q--------\n")  # 点集
@@ -354,6 +362,7 @@ class Graph:
                   .format(knot.earliest_start_time, knot.last_time, knot.earliest_finish_time))
             print("最迟开始:{}\t自由时差:{}\t最迟结束:{}"
                   .format(knot.latest_start_time, knot.free_time_difference, knot.latest_finish_time))
+            print('横坐标:{}\t纵坐标:{}\t是否为关键事件:{}'.format(knot.xcor, knot.ycor, knot.is_key))
             print('\n')
 
     def readDataFromSQL(self, SQLData, projectDuration):  # 在数据库中读取数
@@ -397,6 +406,11 @@ class Graph:
     def getSufKnotID(self, _ID):  # 获得所有后继点ID,返回列表
         _pos = self.__IDToPos(_ID)
         return self.suf_knotList[_pos]
+
+    def getCoordinates(self, __ID):
+        _pos = self.__IDToPos(__ID)
+        knot = self.knotList[_pos]
+        return knot.xcor, knot.ycor
 
 
 class Project:  # 一个工程
