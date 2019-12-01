@@ -1,6 +1,5 @@
 from datetime import datetime
 
-
 class Link:
     def __init__(self):
         self.fromID = 0  # 边起点
@@ -9,6 +8,8 @@ class Link:
 
 class Knot:
     def __init__(self):
+        self.last_time = 0
+        # 持续时间
         self.ID = 0
         # 节点ID
         self.name = 0
@@ -54,7 +55,7 @@ class Graph:
         # suf_knotList每个元素是一个list
         # list中包含v的所有后继点ID号
 
-    def __IDToPos(self, _ID):  # ID转换到pos,返回int
+    def IDToPos(self, _ID):  # ID转换到pos,返回int
         pos = -1
         for knot in self.knotList:
             pos += 1
@@ -67,10 +68,10 @@ class Graph:
     # ---------------------------------↓必看↓---------------------------------#
     #                                                                        #
     #                 解释为什么要有pos:                                       #
-    #                 pos是Knot在knotList中存储的坐标                          #
-    #                 当只知道ID时并不能直接从knotList中读出该ID对应的节点信息    #
-    #                 ID转换成pos,再使用knotList[pos]才能读出该节点信息          #
-    #                 总结:函数接口()中都用ID,列表下标[]中都用pos                #
+    #                 pos是Knot在knotList中存储的坐标                           #
+    #                 当只知道ID时并不能直接从knotList中读出该ID对应的节点信息       #
+    #                 ID转换成pos,再使用knotList[pos]才能读出该节点信息           #
+    #                 总结:函数接口()中都用ID,列表下标[]中都用pos                  #
     #                 IDToPos()和posToID()就是解决ID与pos不匹配用的             #
     #                                                                         #
     # ---------------------------------↑必看↑---------------------------------#
@@ -303,6 +304,43 @@ class Graph:
             if not changed:  # 一次循环下来若零度节点数未变,说明有环出现
                 return None
         return outPutList
+
+    # ---------------------------------↑必看↑---------------------------------#
+
+    def posToID(self, _pos):  # pos转换到ID,返回int
+        knot = self.knotList[_pos]
+        return knot.ID
+
+    def getAllRelatedKnotID(self, _ID):  # 获得所有相邻点ID,返回列表
+        _pos = self.IDToPos(_ID)
+        related_knotsID = []
+        for knotID in self.pre_knotList[_pos]:
+            related_knotsID.append(knotID)
+        for knotID in self.suf_knotList[_pos]:
+            related_knotsID.append(knotID)
+        return related_knotsID
+
+    def getPreKnotID(self, _ID):  # 获得所有后继点ID,返回列表
+        _pos = self.IDToPos(_ID)
+        related_knotsID = []
+        for knotID in self.suf_knotList[_pos]:
+            related_knotsID.append(knotID)
+        return related_knotsID
+
+    def getSufKnotID(self, _ID):  # 获得所有前驱点ID,返回列表
+        _pos = self.IDToPos(_ID)
+        related_knotsID = []
+        for knotID in self.pre_knotList[_pos]:
+            related_knotsID.append(knotID)
+        return related_knotsID
+
+    def getInDegree(self, knotID):  # 获得某节点的入度,返回int
+        inDegree = len(self.getPreKnotID(knotID))
+        return inDegree
+
+    def getOutDegree(self, knotID):  # 获得某节点的出度,返回int
+        outDegree = len(self.getSufKnotID(knotID))
+        return outDegree
 
     def inputData(self):  # 输入数据
         print("------↓输入节点↓------退出:q--------\n")  # 点集
