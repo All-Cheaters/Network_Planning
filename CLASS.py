@@ -1,4 +1,4 @@
-from datetime import datetime
+from datetime import datetime, timedelta
 
 
 class Link:
@@ -53,6 +53,11 @@ class Graph:
         # 每个节点(v)的后继点列表 (二维列表)
         # suf_knotList每个元素是一个list
         # list中包含v的所有后继点ID号
+        self.last_time = 0
+        # 项目的持续时间
+        self.start_date = datetime(2019, 1, 1)
+        # 项目的开始时间
+        # type:
 
     def __IDToPos(self, _ID):  # ID转换到pos,返回int
         pos = -1
@@ -155,17 +160,17 @@ class Graph:
             his_free_time_difference = \
                 min(EarliestStartTimeList) - self.getEarliestFinishTime(hisID)
             self.knotList[hisPos].free_time_difference = his_free_time_difference
-        if self.knotList[self.__IDToPos(hisID)].free_time_difference == 0:
-            self.knotList[self.__IDToPos(hisID)].is_key = True
 
     def __countTotalTimeDifference(self, hisID):  # ---------------------计算总时差---------------------
         # 总时差=该工作最迟完成时间-该工作最早完成时间
         # or 该工作最迟开始时间-该工作最早开始时间
         hisPos = self.__IDToPos(hisID)
         self.knotList[hisPos].total_time_difference = \
-            self.getLatestStartTime(hisID) - self.getEarliestFinishTime(hisID)
+            self.getLatestStartTime(hisID) - self.getEarliestStartTime(hisID)
+        if self.knotList[hisPos].total_time_difference == 0:
+            self.knotList[hisPos].is_key = True
 
-    def __count(self, projectDuration):  # 由拓扑结构和lastTime计算每个节点的其余数值
+    def __count(self):  # 由拓扑结构和lastTime计算每个节点的其余数值
         topologicalList = self.getTopologicalSorting()
         if topologicalList is None:
             print('有环图')
@@ -175,15 +180,30 @@ class Graph:
             for knotID in topologicalList:
                 self.__countEarliestStartTime(knotID)  # 必须先算最早开始再算最早结束
                 self.__countEarliestFinishTime(knotID)
+            for pos in range(self.getKnotNum()):
+                if self.getEarliestFinishTime(self.__posToID(pos)) > self.last_time:
+                    self.last_time = self.getEarliestFinishTime(self.__posToID(pos))
             topologicalList.reverse()  # 拓扑序列反转
             # 最晚系列
             for knotID in topologicalList:
-                self.__countLatestStartTime(knotID, projectDuration)  # 必须先算最迟开始再算最迟结束
-                self.__countLatestFinishTime(knotID, projectDuration)
+                self.__countLatestStartTime(knotID, self.last_time)  # 必须先算最迟开始再算最迟结束
+                self.__countLatestFinishTime(knotID, self.last_time)
             # 时差系列
             for knotID in topologicalList:
                 self.__countFreeTimeDifference(knotID)
                 self.__countTotalTimeDifference(knotID)
+        self.__convertToDate()
+
+    def __convertToDate(self):
+        for pos in range(self.getKnotNum()):
+            self.knotList[pos].earliest_start_time = self.start_date + timedelta(
+                days=self.knotList[pos].earliest_start_time)
+            self.knotList[pos].earliest_finish_time = self.start_date + timedelta(
+                days=self.knotList[pos].earliest_finish_time)
+            self.knotList[pos].latest_start_time = self.start_date + timedelta(
+                days=self.knotList[pos].latest_start_time)
+            self.knotList[pos].latest_finish_time = self.start_date + timedelta(
+                days=self.knotList[pos].latest_finish_time)
 
     def calculateCoordinates(self, canvasSize):
         knotsGroupByXCoord = []  # 将点按横坐标分类，横坐标相同的点构成一个list
@@ -275,6 +295,11 @@ class Graph:
         knot = self.knotList[hisPos]
         return knot.latest_finish_time
 
+    def getKey(self, hisID):
+        hisPos = self.__IDToPos(hisID)
+        knot = self.knotList[hisPos]
+        return knot.is_key
+
     def getTopologicalSorting(self):  # 拓扑排序,返回排序后列表, 若为有环图则返回None
         outPutList = []  # 输出的ID
         inDegreeList = []
@@ -303,6 +328,7 @@ class Graph:
             if not changed:  # 一次循环下来若零度节点数未变,说明有环出现
                 return None
         return outPutList
+
 
     def inputData(self):  # 输入数据
         print("------↓输入节点↓------退出:q--------\n")  # 点集
@@ -356,8 +382,8 @@ class Graph:
             print('\n')
         print('-------------具体信息-------------\n')
         for knot in self.knotList:
-            print("ID:{}\tname:{}"
-                  .format(knot.ID, knot.name))
+            print("ID:{}\tname:{}\t总时差:{}"
+                  .format(knot.ID, knot.name, knot.total_time_difference))
             print("最早开始:{}\t持续时间:{}\t最早结束:{}"
                   .format(knot.earliest_start_time, knot.last_time, knot.earliest_finish_time))
             print("最迟开始:{}\t自由时差:{}\t最迟结束:{}"
@@ -365,9 +391,11 @@ class Graph:
             print('横坐标:{}\t纵坐标:{}\t是否为关键事件:{}'.format(knot.xcor, knot.ycor, knot.is_key))
             print('\n')
 
-    def readDataFromSQL(self, SQLData, projectDuration):  # 在数据库中读取数
+    def readDataFromSQL(self, SQLData, startDate):  # 在数据库中读取数
         # 预计格式
         # {'ID': 1 , 'LT' : 5 , 'name' : superSon , 'pre' : [1,2,3,4] }
+        self.last_time = 0
+        self.start_date = startDate
         initLinkList = []
         for item in SQLData:
             knot = Knot()
@@ -383,16 +411,19 @@ class Graph:
             for preKnotID in item['pre']:
                 if item['pre'] == [0]:
                     continue
-                link = Link()
-                link.fromID = preKnotID
-                link.toID = knot.ID
-                initLinkList.append(link)
+                else:
+                    link = Link()
+                    link.fromID = preKnotID
+                    link.toID = knot.ID
+                    initLinkList.append(link)
         for link in initLinkList:
             fromID = link.fromID
             fromPos = self.__IDToPos(fromID)
             toID = link.toID
             self.suf_knotList[fromPos].append(toID)
-        self.__count(projectDuration)
+        # print(self.suf_knotList)
+        # print(self.pre_knotList)
+        self.__count()
 
     def getAllRelatedKnotID(self, _ID):  # 获得所有相邻点ID,返回列表
         _pos = self.__IDToPos(_ID)
@@ -418,14 +449,14 @@ class Project:  # 一个工程
         self.graph = Graph()  # 一个工程的进度图
         self.ID = 0
         self.name = 0
-        self.startTime = 0  # 工程的开始时间
-        self.finishTime = 0  # 工程的结束时间
+        self.startDate = 0  # 工程的开始时间
+        self.finishDate = 0  # 工程的结束时间
         self.duration = 0  # 工程工期
 
     def readDataFromSQL(self, SQLData):
         self.ID = SQLData[0]['ID']
         self.name = SQLData[0]['name']
-        self.startTime = datetime.strptime(SQLData[0]['startTime'], "%Y-%m-%d")
-        self.finishTime = datetime.strptime(SQLData[0]['finishTime'], "%Y-%m-%d")
-        self.duration = int((self.finishTime - self.startTime).days)
-        self.graph.readDataFromSQL(SQLData[1], self.duration)
+        self.startDate = datetime.strptime(SQLData[0]['startTime'], "%Y-%m-%d")
+        self.finishDate = datetime.strptime(SQLData[0]['finishTime'], "%Y-%m-%d")
+        self.duration = int((self.finishDate - self.startDate).days)
+        self.graph.readDataFromSQL(SQLData[1], self.startDate)
