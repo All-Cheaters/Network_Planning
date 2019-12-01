@@ -17,7 +17,11 @@ function update() {
     $ExistForm.find('select').each(function () {
         $('#' + "items-" + $(this).data('id') + "-pre_item").append("<option value='Value'>无</option>");
         for (let i = 0; i < value.length; i++) {
-            let NewOption = new Option('0' + (i + 1) + ' ' + value[i]);
+            if ((i + 1) < 10) {
+                let NewOption = new Option('0' + (i + 1) + ' ' + value[i]);
+            } else {
+                let NewOption = new Option((i + 1) + ' ' + value[i]);
+            }
             $('#' + "items-" + $(this).data('id') + "-pre_item").append(NewOption);
         }
     });
