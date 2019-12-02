@@ -52,7 +52,7 @@ function adjustIndices(removedIndex) {
             $item.attr('name', $item.attr('name').replace(index, newIndex));
             $item.attr('data-id', $item.attr('data-id').replace(index, newIndex));
         });
-        $newForm.find('select').each(function () {
+        $form.find('select').each(function () {
             let $item = $(this);
             $item.attr('id', $item.attr('id').replace(index, newIndex));
             $item.attr('name', $item.attr('name').replace(index, newIndex));

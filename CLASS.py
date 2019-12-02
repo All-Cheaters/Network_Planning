@@ -39,6 +39,8 @@ class Knot:
         # 节点纵坐标
         self.is_key = False
         # 是否为关键节点
+        self.preName = []
+        self.sufName = []
 
 
 class Graph:
@@ -300,6 +302,11 @@ class Graph:
         knot = self.knotList[hisPos]
         return knot.is_key
 
+    def getName(self,hisID):
+        hisPos = self.__IDToPos(hisID)
+        knot = self.knotList[hisPos]
+        return knot.name
+
     def getTopologicalSorting(self):  # 拓扑排序,返回排序后列表, 若为有环图则返回None
         outPutList = []  # 输出的ID
         inDegreeList = []
@@ -421,8 +428,13 @@ class Graph:
             fromPos = self.__IDToPos(fromID)
             toID = link.toID
             self.suf_knotList[fromPos].append(toID)
-        # print(self.suf_knotList)
-        # print(self.pre_knotList)
+        for pos in range(len(self.knotList)):
+            for ID in self.pre_knotList[pos]:
+                name = self.getName(ID)
+                self.knotList[pos].preName.append(name)
+            for ID in self.suf_knotList[pos]:
+                name = self.getName(ID)
+                self.knotList[pos].sufName.append(name)
         self.__count()
 
     def getAllRelatedKnotID(self, _ID):  # 获得所有相邻点ID,返回列表
