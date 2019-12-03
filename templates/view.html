@@ -1,17 +1,47 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Title</title>
-</head>
-<body>
-{{ form_two.csrf_token }}
-<table>
-    {% for foo in items %}
+{% extends "layout.html" %}
+
+{% block css %}
+<link rel="stylesheet" href="/static/Bootstrap-select_files/bootstrap.min.css">
+<link rel="stylesheet" href="/static/Bootstrap-select_files/bootstrap-select.css">
+<link rel="stylesheet" href="/static/content/view.css">
+{% endblock %}
+
+{% block content %}
+<div>
+    <input id="search" type="text" name="search" placeholder="输入查找的项目名称">
+</div>
+<div id="table_body">
+    <table border="1">
+        <thead>
         <tr>
-            <td>{{ foo }}</td>
+            <th>项目名称</th>
+            <th>前驱事件</th>
+            <th>后继事件</th>
+            <th>持续时间</th>
+            <th>工作最早开始时间</th>
+            <th>工作最早完成时间</th>
+            <th>工作最迟开始时间</th>
+            <th>工作最迟完成时间</th>
+            <th>自由时差</th>
+            <th>总时差</th>
+            <th>关键事件</th>
         </tr>
-    {% endfor %}
-</table>
-</body>
-</html>
+        </thead>
+        <tbody>
+        </tbody>
+    </table>
+</div>
+
+<div id="change">
+    <button onclick='window.location.href="{{ url_for(' change
+    ') }}" '>启用编辑</button>
+</div>
+<div id="graph">
+    <button onclick='window.location.href="{{ url_for(' graph
+    ') }}" '>绘制单计划网络图</button>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script type="text/javascript" src="/static/scripts/view.js"></script>
+{% endblock %}
