@@ -27,37 +27,36 @@
             {{ form_one.project_FT.label }}
             {{ form_one.project_FT }}
         </div>
-        <!--{#    模板参数将被替换为一个隐藏字段，用来是实现在配置中激活的 CSRF 保护。如果你已经激活了 CSRF，这个字段需要出现在你所有的表单中#}
-        {#      注：只有Flaskform类有{ form.hidden_tag }}方法，form类中没有#}-->
-        <div id="subforms_container">
-            <div id="item-_-form" class="is-hidden" data-index="_">
-                <!--{#    label for 与相应id的表单元素相绑定#}-->
-                <label for="items-_-item_name">事件名称</label>
-                <input id="items-_-item_name" name="items-_-item_name" data-id="_" type="text" value="">
-                <label for="items-_-item_pre">前驱事件</label>
-                <select id="items-_-item_pre" name="items-_-item_pre" data-id="_" type="text" class="select_picker" data-live-search="true" multiple></select>
-                <label for="items-_-item_LT">持续时间</label>
-                <input id="items-_-item_LT" name="items-_-item_LT" data-id="_" type="text" value="">
 
-                <button class="remove">删除 </button>
-            </div>
+        <div id="subforms_container">
+
         </div>
-        <!--{#    提交按钮在这！！#}-->
-        <button type="submit">提交</button>
-    </form><br>
+            <!--{#    提交按钮在这！！#}-->
+            <button type="submit">提交</button>
+</form><br>
     <div class="form_add">
         <button id="add">新建事项</button>
     </div>
 
+    <div id="item-_-form" class="is-hidden" data-index="_">
+        <!--{#    label for 与相应id的表单元素相绑定#}-->
+        <label for="items-_-item_name">事件名称</label>
+        <input id="items-_-item_name" name="items-_-item_name" data-id="_" type="text" value="">
+        <label for="items-_-item_pre">前驱事件</label>
+        <select id="items-_-item_pre" name="items-_-item_pre" data-id="_" type="text" class="select_picker" data-live-search="true" multiple></select>
+        <label for="items-_-item_LT">持续时间</label>
+        <input id="items-_-item_LT" name="items-_-item_LT" data-id="_" type="text" value="">
+
+        <button class="remove">删除 </button>
+    </div>
 
 
-    <script src="/static/scripts/jquery.js"></script>
+
+    <!--<script src="/static/scripts/jquery.js"></script>-->
     <!--<script src="/static/Bootstrap-select_files/jquery.min.js.下载"></script>-->
     <script src="/static/Bootstrap-select_files/bootstrap.min.js.下载"></script>
     <script src="/static/Bootstrap-select_files/bootstrap-select.js.下载"></script>
     <script src="/static/scripts/choose.js"></script>
-    <script type="text/javascript">
-
 
 </body>
 </html>

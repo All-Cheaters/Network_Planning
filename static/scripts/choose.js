@@ -7,8 +7,8 @@ function update() {
     //find('input:first')只获取subform下的第一个input，否则因为subform下有两个input，一个subform会循环两遍，每次value会传入两个相同的值
     //find('input:first')可以而find('input').first()不可以，后者输出所有subform的第一个，既只输出一次
     $ExistForm.find('input:first').each(function () {
-        if (($('#' + "items-" + $(this).data('id') + "-item_name").val()) !== "") {
-            value.push(($(this).data('id')+1)+$('#' + "items-" + $(this).data('id') + "-item_name").val());
+        if (($('#' + "items-" + $(this).attr("data-id") + "-item_name").val()) !== "") {
+            value.push($('#' + "items-" + $(this).attr("data-id") + "-item_name").val());
         }
     });
 
@@ -32,26 +32,25 @@ function update() {
     };
 
     let inputvalue = $.arrayIntersect(optionvalue, value);
-    alert(inputvalue);
 
     $ExistForm.find('select').each(function () {
-        if ($('#' + "items-" + $(this).data('id') + "-item_pre").val() == null) {
-            $('#' + "items-" + $(this).data('id') + "-item_pre").append("<option value='0'>无</option>")
+        if ($('#' + "items-" + $(this).attr("data-id") + "-item_pre").text() == "无") {
+            //$('#' + "items-" + $(this).attr("data-id") + "-item_pre").append("<option value='0'>无</option>")
             for (let i=0; i < value.length; i++) {
                 //new Option("text","value")方法
                 let NewOption = new Option(value[i],value[i]);
-                $('#' + "items-" + $(this).data('id') + "-item_pre").append(NewOption);
-                $('#' + "items-" + $(this).data('id') + "-item_pre").selectpicker('refresh');
-                $('#' + "items-" + $(this).data('id') + "-item_pre").selectpicker('render');
+                $('#' + "items-" + $(this).attr("data-id") + "-item_pre").append(NewOption);
+                $('#' + "items-" + $(this).attr("data-id") + "-item_pre").selectpicker('refresh');
+                $('#' + "items-" + $(this).attr("data-id") + "-item_pre").selectpicker('render');
             }
         }
         else{
             for (let j=0; j < inputvalue.length; j++) {
                 //new Option("text","value")方法
                 let NewOption = new Option(inputvalue[j], inputvalue[j]);
-                $('#' + "items-" + $(this).data('id') + "-item_pre").append(NewOption);
-                $('#' + "items-" + $(this).data('id') + "-item_pre").selectpicker('refresh');
-                $('#' + "items-" + $(this).data('id') + "-item_pre").selectpicker('render');
+                $('#' + "items-" + $(this).attr("data-id") + "-item_pre").append(NewOption);
+                $('#' + "items-" + $(this).attr("data-id") + "-item_pre").selectpicker('refresh');
+                $('#' + "items-" + $(this).attr("data-id") + "-item_pre").selectpicker('render');
             }
         }
         
@@ -90,13 +89,19 @@ function adjustIndices(removedIndex) {
         $form.data('index', newIndex);
 
         //change IDs in form inputs
-        $form.find('input').each(function () {
+        $form.find('input:first').each(function () {
             let $item = $(this);
             $item.attr('id', $item.attr('id').replace(index, newIndex));
             $item.attr('name', $item.attr('name').replace(index, newIndex));
             $item.attr('data-id', $item.attr('data-id').replace(index, newIndex));
         });
-        $newForm.find('select').each(function () {
+        $form.find('select').each(function () {
+            let $item = $(this);
+            $item.attr('id', $item.attr('id').replace(index, newIndex));
+            $item.attr('name', $item.attr('name').replace(index, newIndex));
+            $item.attr('data-id', $item.attr('data-id').replace(index, newIndex));
+        });
+        $form.find('input:last').each(function () {
             let $item = $(this);
             $item.attr('id', $item.attr('id').replace(index, newIndex));
             $item.attr('name', $item.attr('name').replace(index, newIndex));
@@ -109,12 +114,23 @@ function removeForm() {
     //$(this).closest('.subform')从当前位置向上搜寻DOM树，直到找到第一个class为subform的元素
     let $removeForm = $(this).closest('.subform');
     let removeIndex = parseInt($removeForm.data('index'));
+    let optionval = $removeForm.find('input:first').val();
+    let $ExistForm = $('.subform');
+    $ExistForm.find('select').each(function () {
+        $('#' + "items-" + $(this).attr("data-id") + "-item_pre option").filter(function () {
+            return $(this).text() == optionval
+        }).remove();
+        $('#' + "items-" + $(this).attr("data-id") + "-item_pre").selectpicker('refresh');
+        $('#' + "items-" + $(this).attr("data-id") + "-item_pre").selectpicker('render');
+    });
+
 
     $removeForm.remove();
 
     //update indices
     adjustIndices(removeIndex);
 }
+
 
 function addForm() {
     let $templateForm = $('#item-_-form');
@@ -149,7 +165,10 @@ function addForm() {
         let $item = $(this);
         $item.attr('id',$item.attr('id').replace('_',newIndex));
         $item.attr('name',$item.attr('name').replace('_',newIndex));
-        $item.attr('data-id',$item.attr('data-id').replace('_',newIndex));
+        $item.attr('data-id', $item.attr('data-id').replace('_', newIndex));
+        $item.append("<option value='0'>无</option>");
+        $item.selectpicker('refresh');
+        $item.selectpicker('render');
     });
 
 
@@ -179,7 +198,7 @@ $(document).ready(function () {
                 // 动态添加元素是从哪个函数里面添加的，其触发事件也需写在此函数下，否则查找不到动态添加元素的触发事件
             let $ExistForm = $('.subform');
             $ExistForm.find('input:first').each(function () {
-                $('#' + "items-" + $(this).data('id') + "-item_name").blur(function () {
+                $('#' + "items-" + $(this).attr("data-id") + "-item_name").blur(function () {
                     //$ExistForm.find('option').remove();
                     update();
                 });
@@ -191,10 +210,13 @@ $(document).ready(function () {
             //        alert('aaa');
             //    });
             //});
+            
         });
+
         $('.remove').click(function () {
             removeForm();
         });
+        
 
         $('#project_FT').click(function () {
             if(Boolean($("#project_ST").val())==false){

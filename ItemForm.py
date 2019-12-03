@@ -5,7 +5,7 @@ from wtforms.fields.html5 import DateField
 
 
 # class ItemForm(FlaskForm):  # FlaskForm继承自Form
-#     ID = StringField('id')
+#     id = StringField('id')
 #     name = StringField('事项名称', [validators.Length(min=1, max=40)])
 #     pre = StringField('前驱', [validators.required()])
 #     LT = IntegerField('持续时间')
@@ -27,9 +27,9 @@ class ProjectForm(FlaskForm):
 class ItemsForm(Form):
     item_id = HiddenField('事件ID')
     item_name = StringField('事件名称')
-    pre_item = SelectMultipleField('前驱事件')
+    item_pre = SelectMultipleField('前驱事件')
     # 暂定为string类型，加到date的%d里，具体我也不会，实现不了可以再改
-    last_time = StringField('持续时间')
+    item_LT = StringField('持续时间')
 
 
 class MainForm(FlaskForm):
