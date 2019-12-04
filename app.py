@@ -81,6 +81,11 @@ def view():
 def change():
     form_one = ProjectForm()
     if request.method == 'GET':
+        for project in DBProject.query.filter().all():
+            form_one.project_id = project.project_id
+            form_one.project_name = project.project_name
+            form_one.project_ST = project.project_ST
+            form_one.project_FT = project.project_FT
         return render_template('change.html', title='change', form_one=form_one)
     if request.method == 'POST':
 

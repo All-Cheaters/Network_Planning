@@ -187,14 +187,13 @@ function addForm() {
 $(document).ready(function () {
 
     $('#add').click(function () {
-        //if(Boolean($("#project_ST").val())==false||Boolean($("#project_FT").val())==false||Boolean($("#project_name").val())==false){
-        //    alert("请先填充项目信息");
-        //}
-        //else if(($("#project_ST").val())>=($("#project_FT").val())){
-        //    alert("截止事件需晚于起始时间");
-        //}
-        //else {
-        addForm();
+        if (Boolean($("#project_ST").val()) == false || Boolean($("#project_FT").val()) == false || Boolean($("#project_name").val()) == false) {
+            alert("请先填充项目信息");
+        } else if (($("#project_ST").val()) >= ($("#project_FT").val())) {
+            alert("截止事件需晚于起始时间");
+        } else {
+            addForm();
+        }
 
         // 动态添加元素是从哪个函数里面添加的，其触发事件也需写在此函数下，否则查找不到动态添加元素的触发事件
         let $ExistForm = $('.subform');
