@@ -1,0 +1,91 @@
+.container body-content {
+    margin-top: -18px;
+}
+
+table {
+    width: 90%;
+    height: 550px;
+    background: #ccc;
+    margin: 10px auto;
+    border-collapse: collapse; /*border-collapse:collapse�ϲ�����߾�(ȥ�����Ԫ��Ĭ�ϵ�2����������߾�*/
+}
+
+th, td {
+    height: 25px;
+    line-height: 25px;
+    text-align: center;
+    border: 1px solid #ccc;
+}
+
+th {
+    background: rgba(238, 238, 238, 1);
+    font-weight: normal;
+}
+
+tr {
+    background: rgba(255, 255, 255, 0.5);
+}
+
+
+#table_body {
+    background: rgba(255, 255, 255, 0.5);
+    border-radius: 2px;
+}
+
+
+tbody {
+    display: block;
+    height: 492px;
+    overflow-y: scroll;
+}
+
+::-webkit-scrollbar {
+    width: 10px;
+    height: 1px;
+}
+
+::-webkit-scrollbar-thumb {
+    border-radius: 10px;
+    -webkit-box-shadow: inset 0 0 5px rgba(0, 0, 0, 0.2);
+    background: #535353;
+}
+
+::-webkit-scrollbar-track {
+    -webkit-box-shadow: inset 0 0 1px rgba(0, 0, 0, 0);
+    border-radius: 10px;
+    background: #ccc;
+}
+
+table thead,
+tbody tr {
+    display: table;
+    width: 100%;
+    table-layout: fixed;
+}
+
+table thead {
+    width: calc(100% - 9px);
+}
+
+#search {
+    background: rgba(255, 255, 255, 0.5);
+    border-radius: 3px;
+    border: 1px;
+}
+
+#change {
+    z-index: 0;
+    position: absolute;
+}
+
+#graph {
+    z-index: 1;
+    position: absolute;
+    margin-left: 1012px;
+}
+
+button {
+    border-radius: 2px;
+    border: 1px;
+    background: rgba(255, 255, 255, 0.8);
+}

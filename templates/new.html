@@ -1,0 +1,73 @@
+{% extends "layout.html" %}
+
+{% block css %}
+<style>
+    .is-hidden {
+        display: none;
+    }
+</style>
+<link rel="stylesheet" href="/static/Bootstrap-select_files/bootstrap.min.css">
+<link rel="stylesheet" href="/static/Bootstrap-select_files/bootstrap-select.css">
+<link rel="stylesheet" href="/static/content/choose.css">
+{% endblock %}
+
+{% block content %}
+
+<form id="form_body" action="" method="post" role="form">
+    <!--{#    模板参数将被替换为一个隐藏字段，用来是实现在配置中激活的 csrf 保护。如果你已经激活了 csrf，这个字段需要出现在你所有的表单中#}
+    {#      注：只有flaskform类有{ form.hidden_tag }}方法，form类中没有#}
+    {#    <div class="is-hidden">{ form_one.hidden_tag }}</div>#}
+    {#    { form_one.csrf_token }}#}-->
+    <div id="form">
+        <div id="subform_project">
+            <div id="project_name_container">
+
+                {{ form_one.project_name.label }}
+                {{ form_one.project_name }}
+            </div>
+            <div id="project_time_container">
+                {{ form_one.project_ST.label }}
+                {{ form_one.project_ST }}
+                {{ form_one.project_FT.label }}
+                {{ form_one.project_FT }}
+            </div>
+
+        </div>
+
+        <div id="subforms_container">
+            <div class="scrollbar"></div>
+        </div>
+    </div>
+    <!--{#    提交按钮在这！！#}-->
+    <div class="form_up" style="border-radius: 2px;">
+        <button type="submit">提交</button>
+    </div>
+</form>
+<div class="form_add" style="border-radius: 2px;">
+    <button id="add">新建事项</button>
+</div>
+
+
+<div id="item-_-form" class="is-hidden" data-index="_">
+    <!--{#    label for 与相应id的表单元素相绑定#}-->
+    <!--<label for="items-_-item_name">事件名称</label>-->
+    <input id="items-_-item_name" name="items-_-item_name" data-id="_" type="text" value="" placeholder="事件名称">
+    <label for="items-_-item_pre">前驱事件</label>
+    <select id="items-_-item_pre" name="items-_-item_pre" data-id="_" type="text" class="select_picker"
+            data-live-search="true" multiple></select>
+    <!--<label for="items-_-item_LT">持续时间</label>-->
+    <input id="items-_-item_LT" name="items-_-item_LT" data-id="_" type="text" value="" placeholder="持续时间">
+
+    <button class="remove">删除</button>
+</div>
+
+
+{% endblock %}
+
+{% block scripts %}
+
+<!--<script src="/static/Bootstrap-select_files/jquery.min.js.下载"></script>-->
+<script src="/static/Bootstrap-select_files/bootstrap.min.js.下载"></script>
+<script src="/static/Bootstrap-select_files/bootstrap-select.js.下载"></script>
+<script src="/static/scripts/choose.js"></script>
+{% endblock %}

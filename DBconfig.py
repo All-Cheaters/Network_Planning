@@ -24,6 +24,12 @@ class DBProject(db.Model):
                     'startTime': self.project_ST,
                     'finishTime': self.project_FT, })
 
+    def serialize_instance(self):
+        d = {'__classname__': type(self).__name__}
+        d.update(vars(self))
+        d.pop('_sa_instance_state')
+        return d
+
 
 class DBItem(db.Model):
     __tablename__ = 'Items'
@@ -39,6 +45,12 @@ class DBItem(db.Model):
                     'pre': self.item_pre,
                     'LT': self.item_LT, })
 
+    def serialize_instance(self):
+        d = {'__classname__': type(self).__name__}
+        d.update(vars(self))
+        d.pop('_sa_instance_state')
+        return d
+
 
 class User(db.Model):
     __tablename__ = 'Users'
@@ -48,3 +60,9 @@ class User(db.Model):
     def __repr__(self):
         return {'user_id': self.user_id,
                 'user_name': self.user_name, }
+
+    def serialize_instance(self):
+        d = {'__classname__': type(self).__name__}
+        d.update(vars(self))
+        d.pop('_sa_instance_state')
+        return d

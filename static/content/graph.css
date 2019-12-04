@@ -1,0 +1,18 @@
+#area {
+    z-index: 0
+}
+
+#return {
+    z-index: 1;
+    margin-top: -33px;
+    margin-left: 1444px;
+}
+
+button {
+    border-radius: 2px;
+    border: 1px;
+    background: rgba(255, 255, 255, 0.8);
+    width: 64px;
+    height: 34px;
+    cursor: pointer;
+}

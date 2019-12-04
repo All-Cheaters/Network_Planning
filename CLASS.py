@@ -33,14 +33,19 @@ class Knot:
         self.total_time_difference = 0
         # 总时差=该工作最迟完成时间
         # =该工作最早完成时间/该工作最迟开始时间-该工作最早开始时间
-        self.xcor = 0
+        self.X = 0
         # 节点横坐标
-        self.ycor = 0
+        self.Y = 0
         # 节点纵坐标
         self.is_key = False
         # 是否为关键节点
-        self.preName = []
-        self.sufName = []
+        self.pre_item = []
+        self.suf_item = []
+
+    def serialize_instance(self):  # 序列化为json
+        d = {'__classname__': type(self).__name__}
+        d.update(vars(self))
+        return d
 
 
 class Graph:
@@ -245,8 +250,8 @@ class Graph:
             for ID in knotsGroupByXCoord[cols]:
                 xCoord = (cols + 1) * unitXLength
                 yCoord += 2 * unitYLength
-                self.knotList[self.__IDToPos(ID)].xcor = xCoord
-                self.knotList[self.__IDToPos(ID)].ycor = yCoord
+                self.knotList[self.__IDToPos(ID)].X = xCoord
+                self.knotList[self.__IDToPos(ID)].Y = yCoord
 
     def getInDegree(self, knotID):  # 获得某节点的入度,返回int
         """
@@ -302,7 +307,7 @@ class Graph:
         knot = self.knotList[hisPos]
         return knot.is_key
 
-    def getName(self,hisID):
+    def getName(self, hisID):
         hisPos = self.__IDToPos(hisID)
         knot = self.knotList[hisPos]
         return knot.name
@@ -335,7 +340,6 @@ class Graph:
             if not changed:  # 一次循环下来若零度节点数未变,说明有环出现
                 return None
         return outPutList
-
 
     def inputData(self):  # 输入数据
         print("------↓输入节点↓------退出:q--------\n")  # 点集
@@ -395,7 +399,7 @@ class Graph:
                   .format(knot.earliest_start_time, knot.last_time, knot.earliest_finish_time))
             print("最迟开始:{}\t自由时差:{}\t最迟结束:{}"
                   .format(knot.latest_start_time, knot.free_time_difference, knot.latest_finish_time))
-            print('横坐标:{}\t纵坐标:{}\t是否为关键事件:{}'.format(knot.xcor, knot.ycor, knot.is_key))
+            print('横坐标:{}\t纵坐标:{}\t是否为关键事件:{}'.format(knot.X, knot.Y, knot.is_key))
             print('\n')
 
     def readDataFromSQL(self, SQLData, startDate):  # 在数据库中读取数
@@ -431,10 +435,10 @@ class Graph:
         for pos in range(len(self.knotList)):
             for ID in self.pre_knotList[pos]:
                 name = self.getName(ID)
-                self.knotList[pos].preName.append(name)
+                self.knotList[pos].pre_item.append(name)
             for ID in self.suf_knotList[pos]:
                 name = self.getName(ID)
-                self.knotList[pos].sufName.append(name)
+                self.knotList[pos].suf_item.append(name)
         self.__count()
 
     def getAllRelatedKnotID(self, _ID):  # 获得所有相邻点ID,返回列表
@@ -453,7 +457,7 @@ class Graph:
     def getCoordinates(self, __ID):
         _pos = self.__IDToPos(__ID)
         knot = self.knotList[_pos]
-        return knot.xcor, knot.ycor
+        return knot.X, knot.Y
 
 
 class Project:  # 一个工程
