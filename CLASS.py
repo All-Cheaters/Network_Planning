@@ -463,6 +463,22 @@ class Graph:
         knot = self.knotList[_pos]
         return knot.X, knot.Y
 
+    def clear(self):
+        self.knotList = []
+        # 节点列表,每一个元素是Knot类型
+        self.pre_knotList = []
+        # 每个节点(v)的前驱点列表 (二维列表)
+        # pre_knotList每个元素是一个list
+        # list中包含v的所有前驱点ID号
+        self.suf_knotList = []
+        # 每个节点(v)的后继点列表 (二维列表)
+        # suf_knotList每个元素是一个list
+        # list中包含v的所有后继点ID号
+        self.last_time = 0
+        # 项目的持续时间
+        self.start_date = datetime(2019, 1, 1)
+        # 项目的开始时间
+        # type:
 
 class Project:  # 一个工程
     def __init__(self):
@@ -474,6 +490,7 @@ class Project:  # 一个工程
         self.duration = 0  # 工程工期
 
     def readDataFromSQL(self, SQLData):
+        self.graph.clear()
         self.ID = SQLData[0]['ID']
         self.name = SQLData[0]['name']
         self.startDate = datetime.strptime(SQLData[0]['startTime'], "%Y-%m-%d")
