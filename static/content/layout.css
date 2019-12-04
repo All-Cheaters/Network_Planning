@@ -1,0 +1,206 @@
+body {
+    padding-top: 2px;
+    padding-bottom: 2px;
+    height: 720px;
+    font-family: 'Poppins', sans-serif;
+}
+
+/* Set padding to keep content from hitting the edges */
+.body-content {
+    padding-left: 15px;
+    padding-right: 15px;
+}
+
+/* Set width on the form input elements since they're 100% wide by default */
+input,
+select,
+textarea {
+    max-width: 280px;
+}
+
+/* styles for validation helpers */
+.field-validation-error {
+    color: #b94a48;
+}
+
+.field-validation-valid {
+    display: none;
+}
+
+input.input-validation-error {
+    border: 1px solid #b94a48;
+}
+
+.validation-summary-errors {
+    color: #b94a48;
+}
+
+.validation-summary-valid {
+    display: none;
+}
+
+#head_image {
+    margin-top: 10px;
+    margin-left: 5px;
+    border-radius: 50%;
+    width: 82px;
+    height: 78px;
+}
+
+#add_img {
+    width: 35px;
+    height: 35px;
+    margin-top: 4px;
+}
+
+#down_img {
+    width: 35px;
+    height: 35px;
+    margin-top: 4px;
+}
+
+#star_img {
+    margin-top: 266px;
+    margin-left: 218px;
+    width: 28px;
+    height: 28px;
+}
+
+.wrapper {
+    display: flex;
+    width: 100%;
+    align-items: stretch;
+}
+
+#sidebar {
+    width: 250px;
+    top: 0;
+    left: 0;
+    margin-top: 8px;
+    margin-bottom: 6px;
+    border-radius: 6px;
+    min-height: 666px;
+    height: 700px;
+    position: fixed;
+    z-index: 999;
+    background-color: rgba(255, 255, 255, 0.5);
+    transition: all 0.3s;
+}
+
+#sidebar.active {
+    margin-left: -250px;
+}
+
+#content {
+    width: calc(100% - 250px);
+    padding: 20px;
+    min-height: 100vh;
+    max-height: 700px;
+    transition: all 0.3s;
+    position: absolute;
+    top: 0;
+    right: 0;
+}
+
+#content.active {
+    width: 100%;
+}
+
+a[data-toggle="collapse"] {
+    position: relative;
+}
+
+.dropdown-toggle::after {
+    display: block;
+    position: absolute;
+    top: 50%;
+    right: 20px;
+    transform: translateY(-50%);
+}
+
+@import "https://fonts.googleapis.com/css?family=Poppins:300,400,500,600,700";
+
+@media (max-width: 768px) {
+    #sidebar {
+        margin-left: -250px;
+    }
+
+    #sidebar.active {
+        margin-left: 0;
+    }
+}
+
+
+p {
+    font-family: 'Poppins', sans-serif;
+    font-size: 1.1em;
+    font-weight: 300;
+    line-height: 1.7em;
+    color: #999;
+}
+
+a, a:hover, a:focus {
+    color: inherit;
+    text-decoration: none;
+    transition: all 0.3s;
+}
+
+#sidebarCollapse {
+    background-color: rgba(57, 179, 215, 0.6);
+    border-color: rgba(38, 154, 188, 0.6);
+}
+
+
+#sidebar .sidebar-header {
+    padding: 10px;
+    border-radius: 6px;
+    background: rgba(192, 192, 192, 0.5);
+}
+
+h3 {
+    margin-top: 10px;
+    margin-bottom: 10px;
+    margin-left: 6px;
+}
+
+#sidebar ul.components {
+    padding-top: 140px;
+    padding-bottom: 9px;
+    border-bottom: 1px solid rgba(71, 116, 139, 0.5);
+}
+
+#sidebar ul p {
+    color: rgba(255, 255, 255, 0.5);
+    padding: 10px;
+}
+
+#sidebar ul li {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+}
+
+#sidebar ul li a {
+    padding: 10px 0 10px 10px;
+    font-size: 1.1em;
+    width: 183px;
+    border-radius: 4px;
+    display: block;
+    margin-left: 20px;
+}
+
+#sidebar ul li a:hover {
+    color: rgba(115, 134, 213, 0.5);
+    background: #fff;
+}
+
+#sidebar ul li.active > a, a[aria-expanded="true"] {
+    color: rgba(255, 255, 255, 0.5);
+    background: rgba(109, 127, 204, 0.5);
+}
+
+ul ul a {
+    font-size: 0.9em !important;
+    padding-left: 30px !important;
+    background: rgba(109, 127, 204, 0.5);
+}

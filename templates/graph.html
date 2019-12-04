@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Network-Planning----graph</title>
+    <link rel="stylesheet" href="/static/content/graph.css">
+</head>
+<body style="background-image: url(../static/img/graph.jpg);
+                          background-size: 100% 100%;
+                          background-repeat: no-repeat;">
+<!-- <img src="img/network.jpg" width=100% height=100%> -->
+<canvas id="area" width="1480" height="700">
+</canvas>
+</body>
+<script type="text/javascript" src="/static/scripts/jquery.js"></script>
+<script type="text/javascript">
+    let canvas = document.getElementById('area');
+    let context = canvas.getContext("2d");
+    $(function () {
+        $.ajax({
+            type: 'GET',
+            url: '/getpyitem',
+            data: {"object": "item"},
+            dataType: 'json', // 注意：这里是指希望服务端返回json格式的数据
+            success: function (items) { // 这里的data就是json格式的数据
+                console.log(items);
+                items.forEach(function (v) {
+                    let prearr = v.pre_item;
+                    items.forEach(function (n) {
+                        if (prearr.includes(n.name)) {
+                            drawline(context, n.X, n.Y, v.X, v.Y);
+                        }
+                    });
+                    drawStar(context, 6, Math.random(), v.X, v.Y, v.name);
+                });
+                canvas.addEventListener("click", function (event) {
+                    let mousePos = getMousePos(canvas, event);
+                    let mouseX = mousePos.x;
+                    let mouseY = mousePos.y;
+                    items.forEach(function (v) {
+                        let distance = Math.sqrt((mouseX - v.X) * (mouseX - v.X) + (mouseY - v.Y) * (mouseY - v.Y));
+                        if (distance <= 12) {
+                            alert("事件序号:" + v.ID + "\n" +
+                                "事件名称:" + v.name + "\n" +
+                                "持续时间:" + v.last_time + "\n" +
+                                "最早开始时间:" + v.earliest_start_time + "\n" +
+                                "最早结束时间:" + v.earliest_finish_time + "\n" +
+                                "最晚开始时间:" + v.latest_start_time + "\n" +
+                                "最晚结束时间:" + v.latest_finish_time + "\n" +
+                                "自由时差:" + v.free_time_difference + "\n" +
+                                "总时差:" + v.total_time_difference + "\n" +
+                                "前置事件:" + v.pre_item + "\n" +
+                                "后继事件:" + v.suf_item + "\n")
+                        }
+                    });
+                });
+            },
+            error: function (xhr, type) {
+                alert('异常')
+            }
+        });
+    });
+
+    //画小星星
+    function drawStar(ctx, r, rot, X, Y, name, borderWidth, borderStyle, fillStyle) {
+        let R = r * 2;
+        ctx.beginPath();
+        for (let i = 0; i < 5; i++) {
+            ctx.lineTo(Math.cos((18 + 72 * i - rot) / 180 * Math.PI) * R + X, -Math.sin((18 + 72 * i - rot) / 180 * Math.PI) * R + Y);
+            ctx.lineTo(Math.cos((54 + 72 * i - rot) / 180 * Math.PI) * r + X, -Math.sin((54 + 72 * i - rot) / 180 * Math.PI) * r + Y);
+        }
+        ctx.closePath();
+
+        ctx.lineWidth = borderWidth || 2;
+        ctx.strokeStyle = borderStyle || "#F9F900";
+        ctx.fillStyle = fillStyle || "#FFFF37";
+        ctx.fill();
+        ctx.stroke();
+
+        ctx.font = "12px Georgia";
+        ctx.fillText(name, X - R, Y + (2 * R));
+
+    }
+
+
+    function drawline(ctx, pre_X, pre_Y, suc_X, suc_Y, borderStyle) {
+        ctx.beginPath();
+        ctx.lineTo(pre_X, pre_Y);
+        ctx.lineTo(suc_X, suc_Y);
+        ctx.closePath();
+
+        ctx.lineWidth = 2;
+        ctx.strokeStyle = borderStyle || "#000000";
+        ctx.fillStyle = "#000000";
+        ctx.fill();
+        ctx.stroke();
+
+    }
+
+
+    // //获取鼠标在canvas画布上的位置(而不是浏览器窗口的鼠标位置)
+    function getMousePos(canvas, event) {
+        //1
+        var rect = canvas.getBoundingClientRect();
+        //2
+        return {
+            x: event.clientX - rect.left * (canvas.width / rect.width),
+            y: event.clientY - rect.top * (canvas.height / rect.height)
+        }
+    }
+
+</script>
+</body>
+</html>
