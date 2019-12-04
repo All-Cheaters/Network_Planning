@@ -439,6 +439,10 @@ class Graph:
             for ID in self.suf_knotList[pos]:
                 name = self.getName(ID)
                 self.knotList[pos].suf_item.append(name)
+            if len(self.knotList[pos].pre_item) == 0:
+                self.knotList[pos].pre_item.append('无')
+            if len(self.knotList[pos].suf_item) == 0:
+                self.knotList[pos].suf_item.append('无')
         self.__count()
 
     def getAllRelatedKnotID(self, _ID):  # 获得所有相邻点ID,返回列表
