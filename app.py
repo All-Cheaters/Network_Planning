@@ -104,8 +104,8 @@ def change():
         # item数据库对象存储
         form_two = request.form.to_dict(flat=False)
         print(form_two)
-        item_key_list = list(form_two.keys())[3:]
-        item_value_list = list(form_two.values())[3:]
+        item_key_list = list(form_two.keys())  # [3:]
+        item_value_list = list(form_two.values())  # [3:]
         print(item_key_list)
         print(item_value_list)
         i = 0

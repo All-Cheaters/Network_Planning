@@ -1,18 +1,3 @@
-// let node = [{
-//     name: '节点1',
-//     pre_item: '无',
-//     last_time: '1'
-// }, {
-//     name: '节点2',
-//     pre_item: '节点1',
-//     last_time: '2'
-// }, {
-//     name: '节点3',
-//     pre_item: '节点2,节点1',
-//     last_time: '16'
-// }]
-
-
 // 动态更新下拉框
 function update() {
     let $ExistForm = $('.subform');

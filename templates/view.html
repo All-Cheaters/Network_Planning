@@ -13,19 +13,19 @@
 <div id="table_body">
     <table border="1">
         <thead>
-        <tr>
-            <th>项目名称</th>
-            <th>前驱事件</th>
-            <th>后继事件</th>
-            <th>持续时间</th>
-            <th>工作最早开始时间</th>
-            <th>工作最早完成时间</th>
-            <th>工作最迟开始时间</th>
-            <th>工作最迟完成时间</th>
-            <th>自由时差</th>
-            <th>总时差</th>
-            <th>关键事件</th>
-        </tr>
+            <tr>
+                <th>项目名称</th>
+                <th>前驱事件</th>
+                <th>后继事件</th>
+                <th>持续时间</th>
+                <th>工作最早开始时间</th>
+                <th>工作最早完成时间</th>
+                <th>工作最迟开始时间</th>
+                <th>工作最迟完成时间</th>
+                <th>自由时差</th>
+                <th>总时差</th>
+                <th>关键事件</th>
+            </tr>
         </thead>
         <tbody>
         </tbody>
@@ -33,12 +33,10 @@
 </div>
 
 <div id="change">
-    <button onclick='window.location.href="{{ url_for(' change
-    ') }}" '>启用编辑</button>
+    <button onclick='window.location.href="{{ url_for('change') }}" '>启用编辑</button>
 </div>
 <div id="graph">
-    <button onclick='window.location.href="{{ url_for(' graph
-    ') }}" '>绘制单计划网络图</button>
+    <button onclick='window.location.href="{{ url_for('graph') }}" '>绘制单计划网络图</button>
 </div>
 {% endblock %}
 
