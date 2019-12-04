@@ -6,6 +6,7 @@ from ItemForm import ProjectForm
 @app.route('/', methods=['GET', 'POST'])
 @app.route('/new/', methods=['GET', 'POST'])
 def new():
+    print('--------------------new--------------------')
     form_one = ProjectForm()
     if request.method == 'GET':
         return render_template('new.html', title='new', form_one=form_one)
@@ -59,9 +60,10 @@ def new():
 
         try:
             db.session.commit()
+            print('成功提交')
         except Exception as e:
             db.session.rollback()
-            print("未成功提交")
+            print("提交失败")
             print(e)
 
         # 计算
@@ -82,13 +84,17 @@ def change():
     print('--------------------change--------------------')
     form_one = ProjectForm()
     if request.method == 'GET':
-        # for project in DBProject.query.filter().all():
-        #     form_one.project_id = project.project_id
-        #     form_one.project_name = project.project_name
-        #     form_one.project_ST = project.project_ST
-        #     form_one.project_FT = project.project_FT
+        for project in DBProject.query.filter().all():
+            form_one.project_id = project.project_id
+            form_one.project_name = project.project_name
+            form_one.project_ST = project.project_ST
+            form_one.project_FT = project.project_FT
         return render_template('change.html', title='change', form_one=form_one)
     if request.method == 'POST':
+
+        print(form_one.project_id.data)
+        print(form_one.project_name.data)
+        print(request.form)
 
         # project数据库对象存储
         project_id = DBProject.query.filter_by(project_name=form_one.project_name.data).first().project_id
@@ -128,7 +134,6 @@ def change():
                              item_pre=item_pre,
                              item_LT=item_LT)
             db.session.add(db_item)
-            print('change里的item')
             print(db_item)
 
         try:
@@ -136,6 +141,7 @@ def change():
             print('成功提交')
         except Exception as e:
             db.session.rollback()
+            print('提交失败')
             print(e)
 
         # 计算

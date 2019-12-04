@@ -184,6 +184,41 @@ function addForm() {
     $newForm.find('.remove').click(removeForm);
 }
 
+function reName(name,id){
+    let value = false
+    let $ExistForm = $('.subform');
+    $ExistForm.find('input:first').each(function () {
+        if($(this).attr("data-id")!=id){
+            if (($('#' + "items-" + $(this).attr("data-id") + "-item_name").val()) == name) {
+            value = true;
+            }
+        }
+    });
+    return value;
+}
+
+function checkEmpty(){
+    let value = false
+    let $ExistForm = $('.subform');
+    $ExistForm.find('input:first').each(function () {
+        if (($('#' + "items-" + $(this).attr("data-id") + "-item_name").val()) == '') {
+        value = true;
+        }
+    });
+    $ExistForm.find('select').each(function () {
+        if (($('#' + "items-" + $(this).attr("data-id") + "-item_pre").val()) == null) {
+        value = true;
+        }
+    });
+    $ExistForm.find('input:last').each(function () {
+        if (($('#' + "items-" + $(this).attr("data-id") + "-item_LT").val()) == '') {
+        value = true;
+        }
+    });
+    return value;
+}
+
+
 $(document).ready(function () {
 
     $('#add').click(function () {
@@ -200,7 +235,14 @@ $(document).ready(function () {
         $ExistForm.find('input:first').each(function () {
             $('#' + "items-" + $(this).attr("data-id") + "-item_name").blur(function () {
                 //$ExistForm.find('option').remove();
-                update();
+                let name = $(this).val();
+                let id = $(this).attr("data-id");
+                if(reName(name,id)){
+                    alert('事件名不可以重复喔');
+                    $(this).val('');
+                }
+                else{
+                    update();}
             });
         });
         //$ExistForm.find('select').each(function () {
@@ -211,6 +253,16 @@ $(document).ready(function () {
         //    });
         //});
 
+    });
+
+    $('#ssubmit').click(function (){
+            if(checkEmpty()) {
+                alert("所有事项都要填满哦");
+                return false;
+            }
+            else{
+                document.$('#form_body').submit();
+            }
     });
 
     $('.remove').click(function () {
