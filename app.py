@@ -48,14 +48,11 @@ def new():
                 item_pre = '00'
                 item_LT = item_value_list[item_index + 1][0]
             i += 1
-            print(item_id + 1)
-            print(item_name)
-            print(item_pre)
-            print(item_LT)
             db_item = DBItem(item_id=item_id + 1,
                              item_name=item_name,
                              item_pre=item_pre,
                              item_LT=item_LT)
+            print(db_item)
             db.session.add(db_item)
 
         try:
@@ -82,20 +79,19 @@ def view():
 @app.route('/change/', methods=['GET', 'POST'])
 def change():
     print('--------------------change--------------------')
-    form_one = ProjectForm()
     if request.method == 'GET':
+        project_data = {}
         for project in DBProject.query.filter().all():
-            form_one.project_id = project.project_id
-            form_one.project_name = project.project_name
-            form_one.project_ST = project.project_ST
-            form_one.project_FT = project.project_FT
+            project_data = {
+                'project_id': project.project_id,
+                'project_name': project.project_name,
+                'project_ST': datetime.datetime.strptime(project.project_ST, '%Y-%m-%d'),
+                'project_FT': datetime.datetime.strptime(project.project_FT, '%Y-%m-%d'),
+            }
+        form_one = ProjectForm(**project_data)
         return render_template('change.html', title='change', form_one=form_one)
     if request.method == 'POST':
-
-        print(form_one.project_id.data)
-        print(form_one.project_name.data)
-        print(request.form)
-
+        form_one = ProjectForm()
         # project数据库对象存储
         project_id = DBProject.query.filter_by(project_name=form_one.project_name.data).first().project_id
         DBProject.query.filter_by(project_name=form_one.project_name.data).update({"project_id": project_id,
