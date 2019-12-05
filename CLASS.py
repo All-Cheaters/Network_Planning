@@ -1,4 +1,5 @@
-from datetime import datetime, timedelta
+from datetime import timedelta
+import datetime
 
 
 class Link:
@@ -40,11 +41,28 @@ class Knot:
         self.is_key = False
         # 是否为关键节点
         self.pre_item = []
+        # 前置事件的名字
         self.suf_item = []
+        # 后置事件的名字
+        self.toPoID = 0
+        # 拓扑排序的id
 
     def serialize_instance(self):  # 序列化为json
-        d = {'__classname__': type(self).__name__}
-        d.update(vars(self))
+        d = {'__classname__': type(self).__name__,
+             'ID': self.ID,
+             'name': self.name,
+             'last_time': self.last_time,
+             'earliest_start_time': self.earliest_start_time.strftime('%Y-%m-%d'),
+             'earliest_finish_time': self.earliest_finish_time.strftime('%Y-%m-%d'),
+             'latest_start_time': self.latest_start_time.strftime('%Y-%m-%d'),
+             'latest_finish_time': self.latest_finish_time.strftime('%Y-%m-%d'),
+             'free_time_difference': self.free_time_difference,
+             'total_time_difference': self.total_time_difference,
+             'X': self.X,
+             'Y': self.Y,
+             'is_key': self.is_key,
+             'pre_item': self.pre_item,
+             'suf_item': self.suf_item}
         return d
 
 
@@ -62,7 +80,7 @@ class Graph:
         # list中包含v的所有后继点ID号
         self.last_time = 0
         # 项目的持续时间
-        self.start_date = datetime(2019, 1, 1)
+        self.start_date = datetime.datetime(2019, 1, 1)
         # 项目的开始时间
         # type:
 
@@ -199,6 +217,11 @@ class Graph:
             for knotID in topologicalList:
                 self.__countFreeTimeDifference(knotID)
                 self.__countTotalTimeDifference(knotID)
+            topoList = self.getTopologicalSorting()
+            for toPoPos in range(len(topoList)):
+                ID = topoList[toPoPos]
+                knotPos = self.__IDToPos(ID)
+                self.knotList[knotPos].toPoID = toPoPos + 1
         self.__convertToDate()
 
     def __convertToDate(self):
@@ -463,6 +486,23 @@ class Graph:
         knot = self.knotList[_pos]
         return knot.X, knot.Y
 
+    def clear(self):
+        self.knotList = []
+        # 节点列表,每一个元素是Knot类型
+        self.pre_knotList = []
+        # 每个节点(v)的前驱点列表 (二维列表)
+        # pre_knotList每个元素是一个list
+        # list中包含v的所有前驱点ID号
+        self.suf_knotList = []
+        # 每个节点(v)的后继点列表 (二维列表)
+        # suf_knotList每个元素是一个list
+        # list中包含v的所有后继点ID号
+        self.last_time = 0
+        # 项目的持续时间
+        self.start_date = datetime.datetime(2019, 1, 1)
+        # 项目的开始时间
+        # type:
+
 
 class Project:  # 一个工程
     def __init__(self):
@@ -474,9 +514,10 @@ class Project:  # 一个工程
         self.duration = 0  # 工程工期
 
     def readDataFromSQL(self, SQLData):
+        self.graph.clear()
         self.ID = SQLData[0]['ID']
         self.name = SQLData[0]['name']
-        self.startDate = datetime.strptime(SQLData[0]['startTime'], "%Y-%m-%d")
-        self.finishDate = datetime.strptime(SQLData[0]['finishTime'], "%Y-%m-%d")
+        self.startDate = datetime.datetime.strptime(SQLData[0]['startTime'], "%Y-%m-%d")
+        self.finishDate = datetime.datetime.strptime(SQLData[0]['finishTime'], "%Y-%m-%d")
         self.duration = int((self.finishDate - self.startDate).days)
         self.graph.readDataFromSQL(SQLData[1], self.startDate)

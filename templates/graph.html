@@ -10,6 +10,9 @@
 <!-- <img src="img/network.jpg" width=100% height=100%> -->
 <canvas id="area" width="1480" height="700">
 </canvas>
+<div id="return">
+    <button onclick='window.location.href="{{ url_for('view') }}" '>退出</button>
+</div>
 </body>
 <script type="text/javascript" src="/static/scripts/jquery.js"></script>
 <script type="text/javascript">
@@ -22,15 +25,25 @@
             data: {"object": "item"},
             dataType: 'json', // 注意：这里是指希望服务端返回json格式的数据
             success: function (items) { // 这里的data就是json格式的数据
-                console.log(items);
                 items.forEach(function (v) {
                     let prearr = v.pre_item;
                     items.forEach(function (n) {
-                        if (prearr.includes(n.name)) {
-                            drawline(context, n.X, n.Y, v.X, v.Y);
+                        if(prearr.includes(n.name)){
+                            if(n.is_key==true&&v.is_key==true){
+                                drawline(context, n.X, n.Y, v.X, v.Y,'#fee43e');
+                            }
+                            else{
+                                drawline(context, n.X, n.Y, v.X, v.Y,'#FFFFFF');
+                            }
+
                         }
                     });
-                    drawStar(context, 6, Math.random(), v.X, v.Y, v.name);
+                    if(v.is_key==true){
+                        drawStar(context,8,Math.random(),v.X,v.Y,v.ID,v.name,2,'#fddd17','#f6fb83');
+                    }
+                    else{
+                        drawStar(context,8,Math.random(),v.X,v.Y,v.ID,v.name,2,'#FFFFFF','#fffccc');
+                    }
                 });
                 canvas.addEventListener("click", function (event) {
                     let mousePos = getMousePos(canvas, event);
@@ -61,46 +74,48 @@
     });
 
     //画小星星
-    function drawStar(ctx, r, rot, X, Y, name, borderWidth, borderStyle, fillStyle) {
-        let R = r * 2;
+	function drawStar( ctx , r , rot ,X ,Y ,id, name, borderWidth , borderStyle , fillStyle){
+        let R = r*2;
         ctx.beginPath();
-        for (let i = 0; i < 5; i++) {
-            ctx.lineTo(Math.cos((18 + 72 * i - rot) / 180 * Math.PI) * R + X, -Math.sin((18 + 72 * i - rot) / 180 * Math.PI) * R + Y);
-            ctx.lineTo(Math.cos((54 + 72 * i - rot) / 180 * Math.PI) * r + X, -Math.sin((54 + 72 * i - rot) / 180 * Math.PI) * r + Y);
+        for( let i = 0 ; i < 5 ; i ++){
+            ctx.lineTo(Math.cos((18+72*i - rot)/180*Math.PI) * R + X ,- Math.sin((18+72*i - rot )/180*Math.PI) * R + Y);
+            ctx.lineTo(Math.cos((54+72*i - rot)/180*Math.PI) * r + X ,- Math.sin((54+72*i - rot )/180*Math.PI) * r + Y);
         }
         ctx.closePath();
 
-        ctx.lineWidth = borderWidth || 2;
-        ctx.strokeStyle = borderStyle || "#F9F900";
-        ctx.fillStyle = fillStyle || "#FFFF37";
+        ctx.lineWidth = borderWidth;
+        ctx.strokeStyle = borderStyle;
+        ctx.fillStyle = fillStyle;
         ctx.fill();
         ctx.stroke();
 
-        ctx.font = "12px Georgia";
-        ctx.fillText(name, X - R, Y + (2 * R));
+        ctx.font="12px Georgia";
+        ctx.fillText(id,X-R,Y+(2*R));
+		ctx.fillText(name,X-(0.5*R),Y+(2*R));
 
     }
 
-
-    function drawline(ctx, pre_X, pre_Y, suc_X, suc_Y, borderStyle) {
-        ctx.beginPath();
-        ctx.lineTo(pre_X, pre_Y);
-        ctx.lineTo(suc_X, suc_Y);
+//画线
+    function drawline( ctx, pre_X, pre_Y, suc_X, suc_Y, color){
+    	ctx.beginPath();
+        ctx.lineTo(pre_X,pre_Y);
+        ctx.lineTo(suc_X,suc_Y);
         ctx.closePath();
 
         ctx.lineWidth = 2;
-        ctx.strokeStyle = borderStyle || "#000000";
-        ctx.fillStyle = "#000000";
+        ctx.strokeStyle = color;
+        ctx.fillStyle = color;
         ctx.fill();
         ctx.stroke();
 
     }
+
 
 
     // //获取鼠标在canvas画布上的位置(而不是浏览器窗口的鼠标位置)
     function getMousePos(canvas, event) {
         //1
-        var rect = canvas.getBoundingClientRect();
+        let rect = canvas.getBoundingClientRect();
         //2
         return {
             x: event.clientX - rect.left * (canvas.width / rect.width),

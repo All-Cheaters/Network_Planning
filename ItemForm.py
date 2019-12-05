@@ -11,12 +11,12 @@ class ProjectForm(FlaskForm):
     project_FT = DateField('截止时间', format='%Y-%m-%d')
 
 
-class ItemsForm(Form):
-    item_id = HiddenField('事件ID')
-    item_name = StringField('事件名称')
-    pre_item = SelectMultipleField('前驱事件')
-    # 暂定为string类型，加到date的%d里，具体我也不会，实现不了可以再改
-    last_time = IntegerField('持续时间')
+# class ItemsForm(Form):
+#     item_id = HiddenField('事件ID')
+#     item_name = StringField('事件名称')
+#     pre_item = SelectMultipleField('前驱事件')
+#     # 暂定为string类型，加到date的%d里，具体我也不会，实现不了可以再改
+#     last_time = IntegerField('持续时间')
 
 # class MainForm(FlaskForm):
 #     items = FieldList(

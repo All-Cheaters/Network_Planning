@@ -13,7 +13,7 @@
 
 {% block content %}
 
-<form id="form_body" action="" method="post" role="form">
+<form id="form_body" οnsubmit="return false;" action="" method="post" role="form">
     <!--{#    模板参数将被替换为一个隐藏字段，用来是实现在配置中激活的 csrf 保护。如果你已经激活了 csrf，这个字段需要出现在你所有的表单中#}
     {#      注：只有flaskform类有{ form.hidden_tag }}方法，form类中没有#}
     {#    <div class="is-hidden">{ form_one.hidden_tag }}</div>#}
@@ -40,7 +40,7 @@
     </div>
     <!--{#    提交按钮在这！！#}-->
     <div class="form_up" style="border-radius: 2px;">
-        <button type="submit">提交</button>
+        <button id="ssubmit">提交</button>
     </div>
 </form>
 <div class="form_add" style="border-radius: 2px;">
@@ -70,4 +70,5 @@
 <script src="/static/Bootstrap-select_files/bootstrap.min.js.下载"></script>
 <script src="/static/Bootstrap-select_files/bootstrap-select.js.下载"></script>
 <script src="/static/scripts/choose.js"></script>
+
 {% endblock %}

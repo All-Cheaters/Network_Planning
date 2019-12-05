@@ -101,17 +101,27 @@ label {
     margin-left: 5px;
 }
 
-.subform input:first-child {
+.subform input {
     width: 152px;
+    height: 33px;
+    border: 1px;
     margin-left: 20px;
     border-radius: 4px;
 }
 
 .subform input:last-child {
     width: 152px;
-    margin-left: 20px;
     border-radius: 4px;
 }
+
+.subform button{
+    height: 33px;
+    border: 1px;
+    border-radius: 3px;
+    width: 64px;
+    margin-left: 11px;
+}
+
 
 .subform lable {
     margin-left: 20px;
