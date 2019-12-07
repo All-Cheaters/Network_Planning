@@ -265,14 +265,16 @@ $(document).ready(function () {
                 else{
                     update();}
             });
+            $('#' + "items-" + $(this).attr("data-id") + "-item_LT").blur(function () {
+                    let number = $(this).val();
+                    let re = /^[0-9]*[1-9][0-9]*$/;
+                    if(!re. test(number)){
+                        alert("持续时间要填入整数喔");
+                        $(this).val('');
+                    }
+                });
         });
-        //$ExistForm.find('select').each(function () {
-        //    $('#' + "items-" + $(this).data('id') + "-item_pre").change(function () {
-        //        $ExistForm.find('option').remove();
-        //        update();
-        //        alert('aaa');
-        //    });
-        //});
+
 
     });
 

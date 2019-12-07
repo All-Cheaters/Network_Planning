@@ -368,6 +368,14 @@ $(document).ready(function () {
                     update();
                 }
             });
+            $('#' + "items-" + $(this).attr("data-id") + "-item_LT").blur(function () {
+                let number = $(this).val();
+                let re = /^[0-9]*[1-9][0-9]*$/;
+                if(!re. test(number)){
+                    alert("持续时间要填入整数喔");
+                    $(this).val('');
+                }
+            });
         });
     });
 
