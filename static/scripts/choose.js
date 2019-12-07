@@ -1,4 +1,4 @@
-// 动态更新下拉框
+//动态更新下拉框
 function update() {
     let $ExistForm = $('.subform');
     // $('#items-1-item_pre option').remove();
@@ -12,32 +12,10 @@ function update() {
         }
     });
 
-    let optionvalueorign = [];
-    //获得已有的option值
-    let options = $("#items-0-item_pre").find("option");
-    for (let i = 0; i < options.length; i++) {
-        optionvalueorign.push(options.eq(i).val());
-    }
-    ;
-
-    let optionvalue = optionvalueorign.reverse().slice(0, (optionvalueorign.length - 1));
-    ;
-
-    //利用.merge，.grep，.inArray方法求数组差集
-    $.arrayIntersect = function (a, b) {
-        return $.merge($.grep(a, function (i) {
-                return $.inArray(i, b) == -1;
-            }), $.grep(b, function (i) {
-                return $.inArray(i, a) == -1;
-            })
-        );
-    };
-
-    let inputvalue = $.arrayIntersect(optionvalue, value);
-
     $ExistForm.find('select').each(function () {
+        let keyvalue = $('#' + "items-" + $(this).attr("data-id") + "-item_name").val();
         if ($('#' + "items-" + $(this).attr("data-id") + "-item_pre").text() == "无") {
-            //$('#' + "items-" + $(this).attr("data-id") + "-item_pre").append("<option value='0'>无</option>")
+            //$('#' + "items-" + $(this).attr("data-id") + "-item_pre").append("<option value='0'>无</option>");
             for (let i = 0; i < value.length; i++) {
                 //new Option("text","value")方法
                 let NewOption = new Option(value[i], value[i]);
@@ -45,7 +23,38 @@ function update() {
                 $('#' + "items-" + $(this).attr("data-id") + "-item_pre").selectpicker('refresh');
                 $('#' + "items-" + $(this).attr("data-id") + "-item_pre").selectpicker('render');
             }
-        } else {
+            //去除自身的option
+            let optall = $('#' + "items-" + $(this).attr("data-id") + "-item_pre")[0].options;
+            for (let i = 0; i < optall.length; i++) {
+                if (optall[i].value == keyvalue) {
+                    optall.remove(i);
+                }
+            }
+            $('#' + "items-" + $(this).attr("data-id") + "-item_pre").selectpicker('refresh');
+            $('#' + "items-" + $(this).attr("data-id") + "-item_pre").selectpicker('render');
+        }
+        else {
+            let optionvalueorign = [];
+            //获得当前select已有的option值
+            let options = $('#' + "items-" + $(this).attr("data-id") + "-item_pre").find("option");
+            for (let i = 0; i < options.length; i++) {
+                optionvalueorign.push(options.eq(i).val());
+            };
+
+            let optionvalue = optionvalueorign.reverse().slice(0, (optionvalueorign.length - 1));
+
+            //利用.merge，.grep，.inArray方法求数组差集
+            $.arrayIntersect = function (a, b) {
+                return $.merge($.grep(a, function (i) {
+                    return $.inArray(i, b) == -1;
+                }), $.grep(b, function (i) {
+                    return $.inArray(i, a) == -1;
+                })
+                );
+            };
+
+            let inputvalue = $.arrayIntersect(optionvalue, value);
+
             for (let j = 0; j < inputvalue.length; j++) {
                 //new Option("text","value")方法
                 let NewOption = new Option(inputvalue[j], inputvalue[j]);
@@ -53,22 +62,17 @@ function update() {
                 $('#' + "items-" + $(this).attr("data-id") + "-item_pre").selectpicker('refresh');
                 $('#' + "items-" + $(this).attr("data-id") + "-item_pre").selectpicker('render');
             }
+                        let optall = $('#' + "items-" + $(this).attr("data-id") + "-item_pre")[0].options;
+            for (let i = 0; i < optall.length; i++) {
+                if (optall[i].value == keyvalue) {
+                    optall.remove(i);
+                }
+            }
+            $('#' + "items-" + $(this).attr("data-id") + "-item_pre").selectpicker('refresh');
+            $('#' + "items-" + $(this).attr("data-id") + "-item_pre").selectpicker('render');
         }
 
     });
-    //var options = [], _options;
-
-    //$ExistSelect.find('select').each(function () {
-    //    $('#' + "items-" + $(this).data('id') + "-item_pre").append("<option value='Value'>无</option>");
-    //    for (var i = 0; i < value.length; i++) {
-    //        var option = '<option value="' + i + '">value[i]</option>';
-    //        options.push(option);
-    //    }
-    //    _options = options.join('');
-    //    $ExistSelect.find('select').each(function () {
-    //        $('#' + "items-" + $(this).data('id') + "-item_pre")[0].innerHTML = _options;
-    //    });
-    //});
 }
 
 //更改id
@@ -198,7 +202,7 @@ function reName(name,id){
 }
 
 function checkEmpty(){
-    let value = false
+    let value = false;
     let $ExistForm = $('.subform');
     $ExistForm.find('input:first').each(function () {
         if (($('#' + "items-" + $(this).attr("data-id") + "-item_name").val()) == '') {
@@ -218,6 +222,21 @@ function checkEmpty(){
     return value;
 }
 
+function onSearch(searchContent) {
+    let search = searchContent;
+    let $ExistForm = $('.subform');
+    console.log(search);
+    $ExistForm.find('input:first').each(function () {
+        console.log($('#' + "items-" + $(this).attr("data-id") + "-item_name").val());
+        if (!($('#' + "items-" + $(this).attr("data-id") + "-item_name").val()).match(search)) {
+            $(this).closest('.subform').hide();
+        }
+        else {
+            $(this).closest('.subform').show();
+        }
+    });
+}
+
 
 $(document).ready(function () {
 
@@ -226,6 +245,8 @@ $(document).ready(function () {
             alert("请先填充项目信息");
         } else if (($("#project_ST").val()) >= ($("#project_FT").val())) {
             alert("截止事件需晚于起始时间");
+        } else if(checkEmpty()){
+                alert("该事项要填满丫")
         } else {
             addForm();
         }
@@ -254,6 +275,11 @@ $(document).ready(function () {
         //});
 
     });
+
+    $('#search').click(function () {
+            let searchname = $('#search_in').val();
+            onSearch(searchname);
+        });
 
     $('#ssubmit').click(function (){
             if(checkEmpty()) {

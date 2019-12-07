@@ -13,6 +13,10 @@
 
 
 {% block content %}
+<div id="search_container">
+    <input id="search_in" type="text" name="search" placeholder="输入查找的项目名称">
+    <button id="search">查找</button>
+</div>
 <form id="form_body" οnsubmit="return false;" action="" method="post" role="form">
     <!--{#    模板参数将被替换为一个隐藏字段，用来是实现在配置中激活的 csrf 保护。如果你已经激活了 csrf，这个字段需要出现在你所有的表单中#}
     {#      注：只有flaskform类有{ form.hidden_tag }}方法，form类中没有#}

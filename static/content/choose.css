@@ -33,6 +33,13 @@ label {
     margin-left: 153px;
 }
 
+#search_container{
+    position: absolute;
+    z-index: 1;
+    margin-top: -55px;
+    margin-left: 887px;
+}
+
 #subform_project {
     width: 380px;
     display: flex;
