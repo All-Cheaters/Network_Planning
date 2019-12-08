@@ -337,7 +337,6 @@ class Graph:
         return knot.name
 
     def getTopologicalSorting(self):  # 拓扑排序,返回排序后列表, 若为有环图则返回None
-        print('Knotlist : {}'.format(self.knotList))
         outPutList = []  # 输出的ID
         inDegreeList = []
         zeroInDegreeKnotNum = 0  # 入度为0节点的个数
@@ -435,8 +434,8 @@ class Graph:
         initLinkList = []
         for item in SQLData:
             knot = Knot()
-            knot.ID = item['ID']
-            knot.last_time = item['LT']
+            knot.ID = int(item['ID'])
+            knot.last_time = int(item['LT'])
             knot.name = item['name']
             self.knotList.append(knot)
             if item['pre'] == [0]:
