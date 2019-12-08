@@ -16,7 +16,7 @@ function addEle(name, pre_item, suc_item, last_time, earliest_start_time, earlie
 
 
 function onSearch(searchContent) {
-    let search = searchContent.value;
+    let search = searchContent;
     console.log(search);
     $("table").find("tbody tr").each(function () {
             let tableTr = $(this);
@@ -40,13 +40,13 @@ $(function () {
         data: {"object": "item"},
         dataType: 'json', // 注意：这里是指希望服务端返回json格式的数据
         success: function (items) { // 这里的data就是json格式的数据
-            console.log(items);
             items.forEach(function (v) {
                 addEle(v.name, v.pre_item, v.suf_item, v.last_time, v.earliest_start_time, v.earliest_finish_time, v.latest_start_time, v.latest_finish_time, v.free_time_difference, v.total_time_difference, v.is_key);
             });
-            $(document).on('blur', '#search', function () {
-                onSearch(this);
-            });
+        $('#search').click(function () {
+            let searchname = $('#search_in').val();
+            onSearch(searchname);
+        });
         },
         error: function (xhr, type) {
             alert('异常')
