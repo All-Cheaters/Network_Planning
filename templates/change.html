@@ -9,9 +9,12 @@
 <link rel="stylesheet" href="/static/Bootstrap-select_files/bootstrap.min.css">
 <link rel="stylesheet" href="/static/Bootstrap-select_files/bootstrap-select.css">
 <link rel="stylesheet" href="/static/content/change.css">
+{%if isCircle == True%}
+<script>
+    alert('存在圈');
+</script>
+{% endif%}
 {% endblock %}
-
-
 {% block content %}
 <div id="search_container">
     <input id="search_in" type="text" name="search" placeholder="输入查找的项目名称">

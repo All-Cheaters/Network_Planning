@@ -13,8 +13,8 @@ class DBProject(db.Model):
     __tablename__ = 'Projects'
     project_id = db.Column(db.Integer, primary_key=True)
     project_name = db.Column(db.String(40))
-    project_ST = db.Column(db.Integer)  # 项目开始时间
-    project_FT = db.Column(db.Integer)  # 项目结束时间
+    project_ST = db.Column(db.String(10))  # 项目开始时间
+    project_FT = db.Column(db.String(10))  # 项目结束时间
 
     # DBItems = db.relationship('DBItem', backref='DBProject', lazy=True)
 
