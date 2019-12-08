@@ -12,6 +12,21 @@
     <button id="search">查找</button>
 </div>
 
+<div id="subform_project">
+
+    <div id="project_name_container">
+        {{ projectInfo.project_name.label }}
+        {{ projectInfo.project_name }}
+    </div>
+    <div id="project_time_container">
+        {{ projectInfo.project_ST.label }}
+        {{ projectInfo.project_ST }}
+        {{ projectInfo.project_FT.label }}
+        {{ projectInfo.project_FT }}
+    </div>
+
+</div>
+
 <div id="table_body">
     <table border="1">
         <thead>

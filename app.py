@@ -11,22 +11,11 @@ def new():
     if request.method == 'GET':
         return render_template('new.html', title='new', form_one=form_one)
     if request.method == 'POST':
-
-        # -----------------------------------
         tempSQLData = [[], []]
-        # -----------------------------------
-
-        # -----------------------------------
-        tempProject = {'ID': 0, 'name': 0, 'startTime': 0, 'finishTime': 0}
-        # -----------------------------------
-
-        # -----------------------------------
-        tempProject['ID'] = 1
-        tempProject['name'] = form_one.project_name.data
-        tempProject['startTime'] =  form_one.project_ST.data.strftime('%Y-%m-%d')
-        tempProject['finishTime'] = form_one.project_FT.data.strftime('%Y-%m-%d')
+        tempProject = {'ID': 1, 'name': form_one.project_name.data,
+                       'startTime': form_one.project_ST.data.strftime('%Y-%m-%d'),
+                       'finishTime': form_one.project_FT.data.strftime('%Y-%m-%d')}
         tempSQLData[0].append(tempProject)
-        # -----------------------------------
 
         # item数据库对象存储
         form_two = request.form.to_dict(flat=False)
@@ -38,7 +27,7 @@ def new():
         i = 0
         j = int(item_key_list[-1][6])
         while i <= j:
-            item_id = i+1
+            item_id = i + 1
             item_index = item_key_list.index('items-' + str(i) + '-item_name')
             item_name = item_value_list[item_index][0]
             item_pre = ''
@@ -53,7 +42,7 @@ def new():
                 item_pre = '00'
                 item_LT = item_value_list[item_index + 1][0]
             i += 1
-            tempSQLData[1].append({'ID':int( item_id) , 'LT' : int( item_LT) , 'name' : item_name , 'pre' :item_pre })
+            tempSQLData[1].append({'ID': int(item_id), 'LT': int(item_LT), 'name': item_name, 'pre': item_pre})
         # 计算
         ItemIntoSQLFile = tempSQLData[1].copy()
         tempSQLData = TranslateTempSQLData(tempSQLData)
@@ -75,7 +64,6 @@ def new():
             db.session.add(db_project)
 
             for itemDict in ItemIntoSQLFile:
-
                 db_item = DBItem(item_id=itemDict['ID'],
                                  item_name=itemDict['name'],
                                  item_pre=itemDict['pre'],
@@ -99,7 +87,6 @@ def view():
 
 @app.route('/change/', methods=['GET', 'POST'])
 def change():
-
     print('--------------------change--------------------')
     if request.method == 'GET':
         project_data = {}
@@ -113,26 +100,17 @@ def change():
         form_one = ProjectForm(**project_data)
         return render_template('change.html', title='change', form_one=form_one)
     if request.method == 'POST':
-        # -----------------------------------
         tempSQLData = [[], []]
-        # -----------------------------------
-
-        # -----------------------------------
-        tempProject = {'ID':0,'name':0,'startTime':0,'finishTime':0}
-        # -----------------------------------
-
+        tempProject = {'ID': 0, 'name': 0, 'startTime': 0, 'finishTime': 0}
         form_one = ProjectForm()
         # project数据库对象存储
         project_id = DBProject.query.filter_by(project_name=form_one.project_name.data).first().project_id
 
-        # -----------------------------------
         tempProject['ID'] = int(project_id)
         tempProject['name'] = form_one.project_name.data
-        tempProject['startTime'] =  form_one.project_ST.data.strftime('%Y-%m-%d')
+        tempProject['startTime'] = form_one.project_ST.data.strftime('%Y-%m-%d')
         tempProject['finishTime'] = form_one.project_FT.data.strftime('%Y-%m-%d')
         tempSQLData[0].append(tempProject)
-        # -----------------------------------
-
 
         # item数据库对象存储
         DBItem.query.delete()  # 删除所有行，返回删除的行数
@@ -160,12 +138,11 @@ def change():
                 item_pre = '00'
                 item_LT = item_value_list[item_index + 1][0]
             i += 1
-            tempSQLData[1].append({'ID':int( item_id) , 'LT' : int( item_LT) , 'name' : item_name , 'pre' :item_pre })
+            tempSQLData[1].append({'ID': int(item_id), 'LT': int(item_LT), 'name': item_name, 'pre': item_pre})
 
         # 计算
         IntoSQLFile = tempSQLData[1].copy()
         tempSQLData = TranslateTempSQLData(tempSQLData)
-
         tempP = Project()
         isCircle = tempP.readDataFromSQL(tempSQLData)
         tempP.graph.calculateCoordinates([1000, 500])
@@ -237,6 +214,7 @@ def getIdByName(item_key_list, item_value_list, name):
         item_id = '0' + str(item_id)
     return item_id
 
+
 def TranslateTempSQLData(tempSQLData):
     projects = tempSQLData[0]
 
@@ -258,6 +236,7 @@ def TranslateTempSQLData(tempSQLData):
             IDList[pos] = int(IDList[pos][:2])
         itemList[itemPos]['pre'] = IDList
     return projectsDict, itemList
+
 
 def TranslateToSQLData():  # 只能读一个项目
     projects = DBProject.query.filter().all()
@@ -288,9 +267,9 @@ def TranslateToSQLData():  # 只能读一个项目
 
 if __name__ == '__main__':
     # 在创建数据库表单之前要先删除表单
-    #db.drop_all()
+    db.drop_all()
     # 创建数据库表单
-    #db.create_all()
+    db.create_all()
     # 全局变量工程，储存计算节点
     p = Project()
     # SQLData = TranslateToSQLData()
