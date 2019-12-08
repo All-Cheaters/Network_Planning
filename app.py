@@ -91,7 +91,13 @@ def new():
 
 @app.route('/view/')
 def view():
-    return render_template('view.html', title='view')
+    projectInfo = ProjectForm()
+    for project in DBProject.query.filter().all():
+        projectInfo.project_id = project.project_id
+        projectInfo.project_name = project.project_name
+        projectInfo.project_ST = datetime.datetime.strptime(project.project_ST, '%Y-%m-%d')
+        projectInfo.project_FT = datetime.datetime.strptime(project.project_FT, '%Y-%m-%d')
+    return render_template('view.html', title='view', projectInfo=projectInfo)
 
 
 @app.route('/change/', methods=['GET', 'POST'])
