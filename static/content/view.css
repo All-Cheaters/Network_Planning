@@ -30,6 +30,7 @@ tr {
 #table_body {
     background: rgba(255, 255, 255, 0.5);
     border-radius: 2px;
+    margin-top: 32px;
 }
 
 
@@ -88,4 +89,28 @@ button {
     border-radius: 2px;
     border: 1px;
     background: rgba(255, 255, 255, 0.8);
+}
+
+#project_name_container{
+    position: absolute;
+    z-index: 1;
+    color: rgba(255,255,255,0.6);
+    font-size: 20px;
+    margin-top: -8px;
+}
+
+#project_time_container{
+    position: absolute;
+    z-index: 1;
+    color: rgba(255,255,255,0.6);
+    font-size: 20px;
+    margin-top: -8px;
+    margin-left: 260px;
+}
+
+#search_container{
+    position: absolute;
+    z-index: 1;
+    margin-left: 854px;
+    margin-top: -8px;
 }

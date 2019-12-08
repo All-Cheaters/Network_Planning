@@ -7,7 +7,7 @@
 {% endblock %}
 
 {% block content %}
-<div>
+<div id="search_container">
     <input id="search_in" type="text" name="search" placeholder="输入查找的项目名称">
     <button id="search">查找</button>
 </div>
@@ -15,13 +15,12 @@
 <div id="subform_project">
 
     <div id="project_name_container">
-        {{ projectInfo.project_name.label }}
+        工程名称：
         {{ projectInfo.project_name }}
     </div>
     <div id="project_time_container">
-        {{ projectInfo.project_ST.label }}
         {{ projectInfo.project_ST }}
-        {{ projectInfo.project_FT.label }}
+        ----
         {{ projectInfo.project_FT }}
     </div>
 

@@ -9,9 +9,10 @@
 <link rel="stylesheet" href="/static/Bootstrap-select_files/bootstrap.min.css">
 <link rel="stylesheet" href="/static/Bootstrap-select_files/bootstrap-select.css">
 <link rel="stylesheet" href="/static/content/choose.css">
+
 {% if overDue == False %}
 <script>
-    alert('您无法在工期内完成所有事项，请重新输入哦！');
+    alert('您无法在工期内完成所有事项，请修改项目工期或事件时间哦!');
 </script>
 {% endif %}
 {% if isCircle == True %}

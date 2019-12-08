@@ -242,7 +242,7 @@ $(document).ready(function () {
 
     $('#add').click(function () {
         if (Boolean($("#project_ST").val()) == false || Boolean($("#project_FT").val()) == false || Boolean($("#project_name").val()) == false) {
-            alert("请先填充项目信息");
+            alert("请先填充完项目信息哦");
         } else if (($("#project_ST").val()) >= ($("#project_FT").val())) {
             alert("截止事件需晚于起始时间");
         } else if(checkEmpty()){
@@ -284,13 +284,17 @@ $(document).ready(function () {
         });
 
     $('#ssubmit').click(function (){
-            if(checkEmpty()) {
-                alert("所有事项都要填满哦");
-                return false;
-            }
-            else{
-                document.$('#form_body').submit();
-            }
+        if (Boolean($("#project_ST").val()) == false || Boolean($("#project_FT").val()) == false || Boolean($("#project_name").val()) == false) {
+            alert("项目信息未填满哦");
+            return false;
+        }
+        else if(checkEmpty()) {
+            alert("所有事项都要填满哦");
+            return false;
+        }
+        else{
+            document.$('#form_body').submit();
+        }
     });
 
     $('.remove').click(function () {

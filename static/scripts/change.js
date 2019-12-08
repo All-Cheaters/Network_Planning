@@ -385,7 +385,11 @@ $(document).ready(function () {
     });
 
     $('#ssubmit').click(function (){
-        if(checkEmpty()) {
+        if (Boolean($("#project_ST").val()) == false || Boolean($("#project_FT").val()) == false || Boolean($("#project_name").val()) == false) {
+            alert("项目信息未填满哦");
+            return false;
+        }
+        else if(checkEmpty()) {
             alert("所有事项都要填满哦");
             return false;
         }
