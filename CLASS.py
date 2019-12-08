@@ -532,3 +532,6 @@ class Project:  # 一个工程
             return True
         else:
             return False
+
+    def duartion_OK(self):
+        return self.duration >= self.graph.last_time
