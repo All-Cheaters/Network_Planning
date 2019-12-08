@@ -65,10 +65,24 @@ def new():
 
         # 计算
         SQLData = TranslateToSQLData()
-        p.readDataFromSQL(SQLData)
+        isCircle = p.readDataFromSQL(SQLData)
+        print("isCircle is {}".format(isCircle))
         p.graph.calculateCoordinates([1000, 500])
-        # p.graph.info()
-        return render_template('view.html', title='view')
+        p.graph.info()
+        if isCircle is True:
+            DBItem.query.delete()  # 删除所有行，返回删除的行数
+            try:
+                db.session.commit()
+                print('成功删除')
+            except Exception as e:
+                db.session.rollback()
+                print("删除失败")
+                print(e)
+            print("return render_template('new.html', title='new', form_one=form_one, isCircle=isCircle)")
+            return render_template('new.html', title='new', form_one=form_one, isCircle=isCircle)
+        else:
+            print("return render_template('view.html', title='view')")
+            return render_template('view.html', title='view')
 
 
 @app.route('/view/')
@@ -129,6 +143,7 @@ def change():
                              item_name=item_name,
                              item_pre=item_pre,
                              item_LT=item_LT)
+
             db.session.add(db_item)
             print(db_item)
 
