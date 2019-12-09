@@ -8,7 +8,7 @@
                           background-size: 100% 100%;
                           background-repeat: no-repeat;">
 <!-- <img src="img/network.jpg" width=100% height=100%> -->
-<canvas id="area">
+<canvas id="area" height="700" width="1480">
 </canvas>
 <div id="return">
     <button onclick='window.location.href="{{ url_for('view') }}" '>退出</button>
@@ -16,13 +16,14 @@
 </body>
 <script type="text/javascript" src="/static/scripts/jquery.js"></script>
 <script type="text/javascript">
-    let Y = $(document).height();
-    let X = $(document).width();
-    $("canvas")[0].style.height = Y-22+"px";
-    $("canvas")[0].style.width = X-54+"px";
-    $("#return")[0].style.marginLeft = X-88+"px";
+
     let canvas = document.getElementById('area');
     let context = canvas.getContext("2d");
+    {#let bodyY = $(document).height();#}
+    {#let bodyX = $(document).width();#}
+    {#$("canvas")[0].style.height = bodyY-22+"px";#}
+    {#$("canvas")[0].style.width = bodyX-54+"px";#}
+    {#$("#return")[0].style.marginLeft = bodyX-88+"px";#}
     $(function () {
         $.ajax({
             type: 'GET',
