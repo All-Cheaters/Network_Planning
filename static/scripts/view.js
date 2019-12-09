@@ -10,8 +10,16 @@ function addEle(name, pre_item, suc_item, last_time, earliest_start_time, earlie
     $row.append($("<td>" + latest_finish_time + "</td>"));
     $row.append($("<td>" + free_time_difference + "</td>"));
     $row.append($("<td>" + total_time_difference + "</td>"));
-    $row.append($("<td>" + is_key + "</td>"));
+    if(is_key==true){
+        $row.append($("<td>"+"是"+"</td>"));
+    }
+    else{
+        $row.append($("<td>"+"否"+"</td>"));
+    }
     $("#table_body").children("table").children("tbody").append($row);
+    if(is_key==true){
+        $row.css('backgroundColor' ,'rgba(255, 127, 80, 0.5)');
+    }
 }
 
 

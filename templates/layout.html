@@ -27,6 +27,7 @@
         </div>
         <div>
             <img id="head_image" src="../static/img/head.jpg">
+            <span id="name">All Cheaters</span>
         </div>
 
         <ul class="list-unstyled components">
@@ -36,6 +37,9 @@
             </li>
             <li>
                 <img id="down_img" src="../static/img/down.png"><a href="{{ url_for('view') }}">已有项目</a>
+            </li>
+            <li>
+                <img id="star2_img" src="../static/img/star2.png"><a href="{{ url_for('graph') }}">计划网络图</a>
             </li>
 
         </ul>
@@ -73,6 +77,8 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/malihu-custom-scrollbar-plugin/3.1.5/jquery.mCustomScrollbar.concat.min.js"></script>
 <!--<script src="/static/scripts/respond.js"></script>-->
 <script type="text/javascript">
+    let Y = $(document).height()-2+"px";
+    $("body")[0].style.height = Y;
     $(document).ready(function () {
         $("#sidebar").mCustomScrollbar({
             theme: "minimal"

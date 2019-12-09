@@ -1,7 +1,6 @@
 body {
     padding-top: 2px;
     padding-bottom: 2px;
-    height: 720px;
     font-family: 'Poppins', sans-serif;
 }
 
@@ -47,6 +46,12 @@ input.input-validation-error {
     height: 78px;
 }
 
+#name {
+    font-size: 20px;
+    margin-top: 11px;
+    margin-left: 10px;
+}
+
 #add_img {
     width: 22px;
     height: 22px;
@@ -59,8 +64,14 @@ input.input-validation-error {
     margin-top: 10px;
 }
 
+#star2_img {
+    width: 22px;
+    height: 22px;
+    margin-top: 10px;
+}
+
 #star_img {
-    margin-top: 266px;
+    margin-top: 182px;
     margin-left: 218px;
     width: 28px;
     height: 28px;
@@ -164,7 +175,7 @@ h3 {
 }
 
 #sidebar ul.components {
-    padding-top: 140px;
+    padding-top: 74px;
     padding-bottom: 9px;
     border-bottom: 1px solid rgba(71, 116, 139, 0.5);
 }
@@ -178,11 +189,15 @@ h3 {
     display: flex;
     flex-direction: row;
     justify-content: center;
+    background: rgba(245, 245, 245, 0.2);
+    margin: 21px;
+    border: 1px solid rgba(245, 245, 245, 0.2);
+    border-radius: 4px;
 }
 
 #sidebar ul li a {
     padding: 10px 0 10px 10px;
-    font-size: 1.1em;
+    font-size: 1.2em;
     width: 183px;
     border-radius: 4px;
     display: block;
