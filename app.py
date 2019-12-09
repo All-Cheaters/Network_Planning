@@ -25,7 +25,7 @@ def new():
         print(item_key_list)
         print(item_value_list)
         i = 0
-        j = int(item_key_list[-1][6])
+        j = int(str(item_key_list[-1]).split('-')[1])
         while i <= j:
             item_id = i + 1
             item_index = item_key_list.index('items-' + str(i) + '-item_name')
@@ -48,7 +48,7 @@ def new():
         tempSQLData = TranslateTempSQLData(tempSQLData)
         isCircle = p.readDataFromSQL(tempSQLData)
         overDue = p.duartion_OK()
-        p.graph.calculateCoordinates([1000, 500])
+        p.graph.calculateCoordinates([1480, 400])
         p.graph.info()
         print(overDue)
         if overDue is False:
@@ -91,6 +91,9 @@ def new():
 
 @app.route('/view/')
 def view():
+    if DBProject.query.filter().all() is not None:
+        SQLData = TranslateToSQLData()
+        p.readDataFromSQL(SQLData)
     projectInfo = ProjectForm()
     for project in DBProject.query.filter().all():
         projectInfo.project_id = project.project_id
@@ -136,7 +139,7 @@ def change():
         # print(item_key_list)
         # print(item_value_list)
         i = 0
-        j = int(item_key_list[-1][6])
+        j = int(str(item_key_list[-1]).split('-')[1])
         while i <= j:
             item_id = i + 1
             item_index = item_key_list.index('items-' + str(i) + '-item_name')
@@ -157,11 +160,11 @@ def change():
 
         # 计算
         IntoSQLFile = tempSQLData[1].copy()
+        print(IntoSQLFile)
         tempSQLData = TranslateTempSQLData(tempSQLData)
         tempP = Project()
         isCircle = tempP.readDataFromSQL(tempSQLData)
         overDue = tempP.duartion_OK()
-        tempP.graph.calculateCoordinates([1000, 500])
         tempP.graph.info()
         print(overDue)
         if overDue is False:
@@ -171,6 +174,7 @@ def change():
             return render_template('change.html', title='change', form_one=form_one, isCircle=isCircle)
         else:
             p.readDataFromSQL(tempSQLData)
+            p.graph.info()
             try:
                 DBProject.query.filter_by(project_name=form_one.project_name.data).update({"project_id": project_id,
                                                                                            "project_name": form_one.project_name.data,
@@ -237,7 +241,7 @@ def getIdByName(item_key_list, item_value_list, name):
     item_id = int(item_id_key.split('-')[1]) + 1
     if item_id < 10:
         item_id = '0' + str(item_id)
-    return item_id
+    return str(item_id)
 
 
 def TranslateTempSQLData(tempSQLData):
@@ -292,14 +296,14 @@ def TranslateToSQLData():  # 只能读一个项目
 
 if __name__ == '__main__':
     # 在创建数据库表单之前要先删除表单
-    db.drop_all()
+    # db.drop_all()
     # 创建数据库表单
-    db.create_all()
+    # db.create_all()
     # 全局变量工程，储存计算节点
     p = Project()
     # SQLData = TranslateToSQLData()
     # p.readDataFromSQL(SQLData)
-    # p.graph.calculateCoordinates([1000, 500])
+    # p.graph.calculateCoordinates([1480, 400])
     # p.graph.info()
     # 通过view()函数在控制台打印数据库数据，不用管报错，这是最后一行往前端传数据的错，回头再解决
     # view()

@@ -472,6 +472,7 @@ class Graph:
             return True  # 是有环图
         else:
             self.__count()
+            self.calculateCoordinates([1480, 400])
             return False
 
     def getAllRelatedKnotID(self, _ID):  # 获得所有相邻点ID,返回列表
