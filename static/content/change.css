@@ -101,7 +101,9 @@ label {
 }
 
 #subform_project input {
-    width: 127px;
+    width: 126px;
+    height: 34px;
+    border: 1px solid rgba(255,255,255,0.5);
     border-radius: 4px;
 }
 

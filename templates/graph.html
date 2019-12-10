@@ -8,7 +8,7 @@
                           background-size: 100% 100%;
                           background-repeat: no-repeat;">
 <!-- <img src="img/network.jpg" width=100% height=100%> -->
-<canvas id="area" width="1480" height="700">
+<canvas id="area" height="700" width="1480">
 </canvas>
 <div id="return">
     <button onclick='window.location.href="{{ url_for('view') }}" '>退出</button>
@@ -16,8 +16,14 @@
 </body>
 <script type="text/javascript" src="/static/scripts/jquery.js"></script>
 <script type="text/javascript">
+
     let canvas = document.getElementById('area');
     let context = canvas.getContext("2d");
+    {#let bodyY = $(document).height();#}
+    {#let bodyX = $(document).width();#}
+    {#$("canvas")[0].style.height = bodyY-22+"px";#}
+    {#$("canvas")[0].style.width = bodyX-54+"px";#}
+    {#$("#return")[0].style.marginLeft = bodyX-88+"px";#}
     $(function () {
         $.ajax({
             type: 'GET',
@@ -26,6 +32,7 @@
             dataType: 'json', // 注意：这里是指希望服务端返回json格式的数据
             success: function (items) { // 这里的data就是json格式的数据
                 items.forEach(function (v) {
+                    console.log(v.X);
                     let prearr = v.pre_item;
                     items.forEach(function (n) {
                         if(prearr.includes(n.name)){
@@ -91,7 +98,7 @@
 
         ctx.font="12px Georgia";
         ctx.fillText(id,X-R,Y+(2*R));
-		ctx.fillText(name,X-(0.5*R),Y+(2*R));
+		ctx.fillText(name,X+(0.5*R),Y+(2*R));
 
     }
 
