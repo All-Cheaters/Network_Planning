@@ -225,7 +225,7 @@ function addEle(name, allvalue, pre_item, last_time) {
     //删除旧的class
     $newForm.removeClass('is-hidden');
     //添加删除静态操作
-    $newForm.find('.remove').click(removeForm);
+    $newForm.find('.remove').click(FakeremoveForm);
 }
 
 function addForm() {
