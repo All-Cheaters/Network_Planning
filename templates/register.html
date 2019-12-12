@@ -2,34 +2,47 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Register</title>
+    <title>Network-Planning----register</title>
+    <link rel="stylesheet" type="text/css" href="/static/content/register.css"/>
 </head>
-<body>
-<h1>注册</h1>
-<form action="" method="post">
+<body style="background-image: url(../static/img/log.jpeg);
+                          background-size: 100% 100%;
+                          background-repeat: no-repeat;">
+
+<div id="title">TIME</div>
+<form action="" method="post"  style="margin-left: 550px;">
     {{ registerform.csrf_token }}
-    <p>
-        {{ registerform.user_name.label }}<br>
+    <div>
         {{ registerform.user_name(size=20) }}<br>
         {% for error in registerform.user_name.errors %}
-        <span style="color: red;">{{ error }}</span>
+        <span style="color: rgb(227, 228, 140);">{{ error }}</span>
         {% endfor %}
-    </p>
-    <p>
-        {{ registerform.user_password.label }}<br>
+    <div>
+    <div>
         {{ registerform.user_password(size=20) }}<br>
         {% for error in registerform.user_password.errors %}
-        <span style="color: red;">{{ error }}</span>
+        <span style="color: rgb(227, 228, 140);">{{ error }}</span>
         {% endfor %}
-    </p>
-    <p>
-        {{ registerform.user_password2.label }}<br>
+    </div>
+    <div>
         {{ registerform.user_password2(size=20) }}<br>
         {% for error in registerform.user_password2.errors %}
-        <span style="color: red;">{{ error }}</span>
+        <span style="color: rgb(227, 228, 140);">{{ error }}</span>
         {% endfor %}
-    </p>
+    </div>
     <p>{{ registerform.submit() }}</p>
+    <div id="login">
+    <button onclick='window.location.href="/login" '>登录</button>
+    </div>
 </form>
+
+<script>
+    {% for error in registerform.user_name.errors %}
+        alert({{ error }});
+    {% endfor %}
+    {% for error in registerform.user_password.errors %}
+       alert({{ error }});
+    {% endfor %}
+</script>
 </body>
 </html>

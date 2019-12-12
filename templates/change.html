@@ -34,13 +34,18 @@
         <div id="subform_project">
             <div id="project_name_container">
                 {{form_one.csrf_token}}
-                <span>工程名称</span>
+                {{ form_one.project_name.label }}
                 {{ form_one.project_name }}
+                {% for error in form_one.project_name.errors %}
+                <span style="color: red;">{{ error }}</span>
+                {% endfor %}
             </div>
-            <div id="project_time_container">
-                <span>开始时间</span>
+            <div id="project_pretime_container">
+                {{ form_one.project_ST.label }}
                 {{ form_one.project_ST }}
-                <span>结束时间</span>
+            </div>
+            <div id="project_suctime_container">
+                {{ form_one.project_FT.label }}
                 {{ form_one.project_FT }}
             </div>
 

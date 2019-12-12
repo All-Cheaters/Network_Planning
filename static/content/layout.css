@@ -1,5 +1,5 @@
 body {
-    height:720px;
+    height:714px;
     padding-top: 2px;
     padding-bottom: 2px;
     font-family: 'Poppins', sans-serif;
@@ -72,7 +72,7 @@ input.input-validation-error {
 }
 
 #star_img {
-    margin-top: 182px;
+    margin-top: 180px;
     margin-left: 218px;
     width: 28px;
     height: 28px;
@@ -94,7 +94,7 @@ input.input-validation-error {
     min-height: 666px;
     height: 700px;
     position: fixed;
-    z-index: 999;
+    z-index: 100;
     background-color: rgba(255, 255, 255, 0.5);
     transition: all 0.3s;
 }
@@ -176,7 +176,7 @@ h3 {
 }
 
 #sidebar ul.components {
-    padding-top: 74px;
+    padding-top: 144px;
     padding-bottom: 9px;
     border-bottom: 1px solid rgba(71, 116, 139, 0.5);
 }
@@ -218,4 +218,20 @@ ul ul a {
     font-size: 0.9em !important;
     padding-left: 30px !important;
     background: rgba(109, 127, 204, 0.5);
+}
+
+#out_container {
+    position: absolute;
+    z-index: 101;
+    margin-top: 182px;
+    margin-left: 4px;
+}
+
+#out{
+    color: white;
+    background: rgb(25,49,70);
+    height: 29px;
+    width: 68px;
+    border: 1px solid;
+    margin-top: -8px;
 }

@@ -40,17 +40,17 @@
                 {{ form_one.project_name.label }}
                 {{ form_one.project_name }}
                 {% for error in form_one.project_name.errors %}
-                <span style="color: red;">{{ error }}</span>
+                <br>
+                <span style="color: rgb(227, 228, 140);">{{ error }}</span>
                 {% endfor %}
             </div>
-            <div id="project_time_container">
+            <div id="project_pretime_container">
                 {{ form_one.project_ST.label }}
                 {{ form_one.project_ST }}
+            </div>
+            <div id="project_suctime_container">
                 {{ form_one.project_FT.label }}
                 {{ form_one.project_FT }}
-                {% for error in form_one.project_FT.errors %}
-                <span style="color: red;">{{ error }}</span>
-                {% endfor %}
             </div>
 
         </div>

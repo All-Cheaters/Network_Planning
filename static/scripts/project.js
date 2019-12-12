@@ -33,7 +33,7 @@ function addProject(id, name) {
     $newForm.attr('id', $newForm.attr('id').replace('_', id));
     $newForm.data('index', id);
 
-    $newForm.find('p').each(function () {
+    $newForm.find('div').each(function () {
         let $item = $(this);
         $item.html(name);
     });

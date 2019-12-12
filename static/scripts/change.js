@@ -135,7 +135,6 @@ function removeForm() {
     adjustIndices(removeIndex);
 }
 
-
 function FakeremoveForm() {
     alert("已提交的事项不提供删除方法哦");
 }

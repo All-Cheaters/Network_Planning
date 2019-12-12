@@ -15,7 +15,7 @@
             crossorigin="anonymous"></script>
 </head>
 
-<body style="background-image: url(../static/img/log.jpeg);
+<body style="background-image: url(../static/img/show.png);
                           background-size: 100% 100%;
                           background-repeat: no-repeat;">
 
@@ -36,13 +36,16 @@
                 <img id="add_img" src="../static/img/add.png"><a href="{{ url_for('new') }}">新建项目</a>
             </li>
             <li>
-                <img id="down_img" src="../static/img/down.png"><a href="{{ url_for('view') }}">已有项目</a>
+                <img id="down_img" src="../static/img/down.png"><a href="{{ url_for('project') }}">已有项目</a>
             </li>
-            <li>
-                <img id="star2_img" src="../static/img/star2.png"><a href="{{ url_for('graph') }}">计划网络图</a>
-            </li>
+{#            <li>#}
+{#                <img id="star2_img" src="../static/img/star2.png"><a href="{{ url_for('graph') }}">计划网络图</a>#}
+{#            </li>#}
 
         </ul>
+        <div id="out_container">
+            <button id="out" onclick='window.location.href="/login" '>退出</button>
+        </div>
         <div>
             <img id="star_img" src="../static/img/star.png" style="CURSOR: pointer"
                  onclick='window.open("https://github.com/All-Cheaters/Network_Planning")'>
