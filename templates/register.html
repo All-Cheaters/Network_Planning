@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Register</title>
+</head>
+<body>
+<h1>注册</h1>
+<form action="" method="post">
+    {{ registerform.csrf_token }}
+    <p>
+        {{ registerform.user_name.label }}<br>
+        {{ registerform.user_name(size=20) }}<br>
+        {% for error in registerform.user_name.errors %}
+        <span style="color: red;">{{ error }}</span>
+        {% endfor %}
+    </p>
+    <p>
+        {{ registerform.user_password.label }}<br>
+        {{ registerform.user_password(size=20) }}<br>
+        {% for error in registerform.user_password.errors %}
+        <span style="color: red;">{{ error }}</span>
+        {% endfor %}
+    </p>
+    <p>
+        {{ registerform.user_password2.label }}<br>
+        {{ registerform.user_password2(size=20) }}<br>
+        {% for error in registerform.user_password2.errors %}
+        <span style="color: red;">{{ error }}</span>
+        {% endfor %}
+    </p>
+    <p>{{ registerform.submit() }}</p>
+</form>
+</body>
+</html>

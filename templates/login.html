@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>LOGIN</title>
+</head>
+<body>
+{% with messages = get_flashed_messages() %}
+    {% if messages %}
+        <ul class=flashes>
+        {% for message in messages %}
+            <li>{{ message }}</li>
+        {% endfor %}
+        </ul>
+    {% endif %}
+{% endwith %}
+<form action="" method="post">
+    {{ loginform.csrf_token }}
+    <p>
+        {{loginform.user_name.label}}<br>
+        {{loginform.user_name(size=20)}}
+        {% for error in loginform.user_name.errors %}
+        <span style="color: red;">{{ error }}</span>
+        {% endfor %}
+    </p>
+    <p>
+        {{loginform.user_password.label}}<br>
+        {{loginform.user_password(size=20)}}
+        {% for error in loginform.user_password.errors %}
+        <span style="color: red;">{{ error }}</span>
+        {% endfor %}
+    </p>
+    <p>{{loginform.remember_me()}}{{loginform.remember_me.label}}</p>
+    <p>{{loginform.submit()}}</p>
+</form>
+</body>
+</html>

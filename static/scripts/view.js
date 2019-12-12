@@ -10,15 +10,14 @@ function addEle(name, pre_item, suc_item, last_time, earliest_start_time, earlie
     $row.append($("<td>" + latest_finish_time + "</td>"));
     $row.append($("<td>" + free_time_difference + "</td>"));
     $row.append($("<td>" + total_time_difference + "</td>"));
-    if(is_key==true){
-        $row.append($("<td>"+"是"+"</td>"));
-    }
-    else{
-        $row.append($("<td>"+"否"+"</td>"));
+    if (is_key == true) {
+        $row.append($("<td>" + "是" + "</td>"));
+    } else {
+        $row.append($("<td>" + "否" + "</td>"));
     }
     $("#table_body").children("table").children("tbody").append($row);
-    if(is_key==true){
-        $row.css('backgroundColor' ,'rgba(255, 127, 80, 0.5)');
+    if (is_key == true) {
+        $row.css('backgroundColor', 'rgba(255, 127, 80, 0.5)');
     }
 }
 
@@ -39,24 +38,35 @@ function onSearch(searchContent) {
     );
 }
 
+// function getProjectId(project_id) {
+//     return project_id
+// }
+
+
+function getQueryString(name) {
+    let reg = new RegExp("(^|&)" + name + "=([^&]*)(&|$)", "i");
+    let r = window.location.search.substr(1).match(reg);
+    if (r != null) return unescape(r[2]);
+    return null;
+}
 
 $(function () {
-    // 获取item_json
     $.ajax({
         type: 'GET',
-        url: '/getpyitem',
-        data: {"object": "item"},
+        url: '/getdbitem',
+        data: {project_id: parseInt(getQueryString('project_id'))},
         dataType: 'json', // 注意：这里是指希望服务端返回json格式的数据
         success: function (items) { // 这里的data就是json格式的数据
             items.forEach(function (v) {
-                addEle(v.name, v.pre_item, v.suf_item, v.last_time, v.earliest_start_time, v.earliest_finish_time, v.latest_start_time, v.latest_finish_time, v.free_time_difference, v.total_time_difference, v.is_key);
+                addEle(v.item_name, v.item_pre_item, v.item_suf_item, v.item_last_time, v.item_earliest_start_time, v.item_earliest_finish_time, v.item_latest_start_time, v.item_latest_finish_time, v.item_free_time_difference, v.item_total_time_difference, v.is_key);
             });
-        $('#search').click(function () {
-            let searchname = $('#search_in').val();
-            onSearch(searchname);
-        });
+            $('#search').click(function () {
+                let searchname = $('#search_in').val();
+                onSearch(searchname);
+            });
         },
         error: function (xhr, type) {
+            console.log(parseInt(getQueryString('project_id')))
             alert('异常')
         }
     });
