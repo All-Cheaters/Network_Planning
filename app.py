@@ -4,7 +4,7 @@ from ItemForm import ProjectForm, LoginForm, RegisterForm
 
 
 @app.route('/', methods=['GET', 'POST'])
-@app.route('/login', methods=['GET', 'POST'])
+@app.route('/login/', methods=['GET', 'POST'])
 def login():
     loginform = LoginForm(request.form)
     if request.method == 'POST' and loginform.validate_on_submit():
@@ -13,21 +13,13 @@ def login():
         print(user_name)
         print(user_password)
         user = DBUser.query.filter_by(user_name=user_name).first()
-        if user is None:
-            flash('用户未注册！')
-            return redirect(url_for('register'))
-        else:
-            if not user.check_password(user_password):
-                flash('用户名或密码错误！')
-                return redirect(url_for('login'))
-            else:
-                login_user(user, remember=loginform.remember_me.data)
-                print(current_user.get_id())
-                return redirect(url_for('new'))
+        login_user(user, remember=loginform.remember_me.data)
+        print(current_user.get_id())
+        return redirect(url_for('new'))
     return render_template('login.html', title='登录', loginform=loginform)
 
 
-@app.route('/register', methods=['GET', 'POST'])
+@app.route('/register/', methods=['GET', 'POST'])
 def register():
     registerform = RegisterForm(request.form)
     if request.method == 'POST' and registerform.validate_on_submit():
@@ -43,9 +35,14 @@ def register():
             db.session.rollback()
             print('注册信息提交失败')
             print(e)
-        flash('注册成功!')
         return redirect(url_for('new'))
     return render_template('register.html', title='注册', registerform=registerform)
+
+
+@app.route('/logout/')
+def logout():
+    logout_user()
+    return redirect(url_for('login'))
 
 
 @app.route('/new/', methods=['GET', 'POST'])
@@ -185,12 +182,14 @@ def change():
         }
         form_one = ProjectForm(**project_data)
         print('√1')
-        return render_template('change.html', project_id=request.args.get('project_id'), title='change', form_one=form_one)
+        return render_template('change.html', project_id=request.args.get('project_id'), title='change',
+                               form_one=form_one)
     if request.method == 'POST':
         form_one = ProjectForm()
         if not form_one.validate_on_submit():
             print('√2')
-            return render_template('change.html', project_id=request.args.get('project_id'), title='change', form_one=form_one)
+            return render_template('change.html', project_id=request.args.get('project_id'), title='change',
+                                   form_one=form_one)
         else:
             tempSQLData = [[], []]
             tempProject = {'ID': 0, 'name': 0, 'startTime': 0, 'finishTime': 0}
@@ -293,7 +292,8 @@ def change():
                 projectInfo.project_ST = form_one.project_ST.data
                 projectInfo.project_FT = form_one.project_FT.data
                 print('√5')
-                return render_template('view.html', project_id=request.args.get('project_id'), title='view', projectInfo=projectInfo)
+                return render_template('view.html', project_id=request.args.get('project_id'), title='view',
+                                       projectInfo=projectInfo)
 
 
 @app.route('/graph/')
@@ -415,16 +415,6 @@ def TranslateToSQLData():  # 只能读一个项目
 
 
 if __name__ == '__main__':
-    # 在创建数据库表单之前要先删除表单
-    # db.drop_all()
-    # 创建数据库表单
-    # db.create_all()
-    # 全局变量工程，储存计算节点
-    # p = Project()
-    # SQLData = TranslateToSQLData()
-    # p.readDataFromSQL(SQLData)
-    # p.graph.calculateCoordinates([1480, 400])
-    # p.graph.info()
-    # 通过view()函数在控制台打印数据库数据，不用管报错，这是最后一行往前端传数据的错，回头再解决
-    # view()
+    db.drop_all()
+    db.create_all()
     app.run(port=5000, debug=True)

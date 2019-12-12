@@ -6,13 +6,13 @@
 </head>
 <body>
 {% with messages = get_flashed_messages() %}
-    {% if messages %}
-        <ul class=flashes>
-        {% for message in messages %}
-            <li>{{ message }}</li>
-        {% endfor %}
-        </ul>
-    {% endif %}
+{% if messages %}
+<ul class=flashes>
+    {% for message in messages %}
+    <li>{{ message }}</li>
+    {% endfor %}
+</ul>
+{% endif %}
 {% endwith %}
 <form action="" method="post">
     {{ loginform.csrf_token }}
@@ -32,6 +32,9 @@
     </p>
     <p>{{loginform.remember_me()}}{{loginform.remember_me.label}}</p>
     <p>{{loginform.submit()}}</p>
+    <div id="login">
+        <button onclick='window.location.href="/register/"'>注册</button>
+    </div>
 </form>
 </body>
 </html>
