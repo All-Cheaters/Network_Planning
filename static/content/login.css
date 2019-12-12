@@ -1,0 +1,56 @@
+body {
+    height:720px;
+    padding-top: 2px;
+    padding-bottom: 2px;
+    font-family: 'Poppins', sans-serif;
+}
+
+/* Set padding to keep content from hitting the edges */
+.body-content {
+    padding-left: 15px;
+    padding-right: 15px;
+}
+
+#title {
+    font-size: 88px;
+    color: white;
+    margin-top: 88px;
+    margin-left: 650px;
+}
+
+div input {
+    width: 348px;
+    height:30px;
+    font-size: 26px;
+    color: white;
+    margin: 70px;
+    border: 0;
+    outline: none;
+    background: rgba(0,0,0,0);
+    border-bottom: 3px solid white;
+}
+
+p input {
+    color: white;
+    background: rgb(25,49,70);
+    height: 36px;
+    width: 122px;
+    border: 1px solid;
+    margin-left: 66px;
+
+}
+
+#register {
+    position: absolute;
+    z-index: 1;
+    margin-top: -45px;
+    margin-left: 304px;
+}
+
+#register button {
+    color: white;
+    background: rgb(25,49,70);
+    height: 36px;
+    width: 122px;
+    border: 1px solid;
+}

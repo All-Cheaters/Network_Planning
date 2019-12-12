@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Network-Planning----register</title>
+    <link rel="stylesheet" type="text/css" href="/static/content/register.css"/>
+</head>
+<body style="background-image: url(../static/img/log.jpeg);
+                          background-size: 100% 100%;
+                          background-repeat: no-repeat;">
+
+<div id="title">TIME</div>
+<form action="" method="post"  style="margin-left: 550px;">
+    {{ registerform.csrf_token }}
+    <div>
+        {{ registerform.user_name(size=20) }}<br>
+        {% for error in registerform.user_name.errors %}
+        <span style="color: rgb(227, 228, 140);">{{ error }}</span>
+        {% endfor %}
+    <div>
+    <div>
+        {{ registerform.user_password(size=20) }}<br>
+        {% for error in registerform.user_password.errors %}
+        <span style="color: rgb(227, 228, 140);">{{ error }}</span>
+        {% endfor %}
+    </div>
+    <div>
+        {{ registerform.user_password2(size=20) }}<br>
+        {% for error in registerform.user_password2.errors %}
+        <span style="color: rgb(227, 228, 140);">{{ error }}</span>
+        {% endfor %}
+    </div>
+    <p>{{ registerform.submit() }}</p>
+    <div id="login">
+    <button onclick='window.location.href="/login" '>登录</button>
+    </div>
+</form>
+
+<script>
+    {% for error in registerform.user_name.errors %}
+        alert({{ error }});
+    {% endfor %}
+    {% for error in registerform.user_password.errors %}
+       alert({{ error }});
+    {% endfor %}
+</script>
+</body>
+</html>

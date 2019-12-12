@@ -1,0 +1,168 @@
+.select_picker {
+    height: 36px;
+    width: 220px;
+    border-radius: 4px;
+    float: none;
+    display: inline-block;
+    margin-left: 0;
+}
+
+label {
+    color: rgba(29, 11, 23, 0.48);
+}
+
+#form {
+    margin-top: -20px;
+    display: flex;
+    flex-direction: row;
+    position: relative;
+    z-index: 0;
+}
+
+.form_add {
+    position: absolute;
+    z-index: 1;
+    margin-top: -214px;
+    margin-left: 28px;
+}
+
+.form_up {
+    position: absolute;
+    z-index: 1;
+    margin-top: -214px;
+    margin-left: 198px;
+}
+
+#search_container{
+    position: absolute;
+    z-index: 1;
+    margin-top: -55px;
+    margin-left: 887px;
+}
+
+#subform_project {
+    width: 380px;
+    display: flex;
+    flex-direction: column;
+    margin-left: -20px;
+    background: rgba(255, 255, 255, 0.5);
+    border-radius: 4px;
+}
+
+#subforms_container {
+    margin-left: 26px;
+    width: 740px;
+    height: 609px;
+    overflow: scroll;
+    border-radius: 4px;
+    background: rgba(255, 255, 255, 0.4);
+}
+
+.scrollbar {
+    width: 30px;
+    height: 300px;
+    margin-top: -295px;
+}
+
+/*������������ʽ*/
+#subforms_container::-webkit-scrollbar {
+    width: 10px;
+    height: 1px;
+}
+
+/*����������*/
+#subforms_container::-webkit-scrollbar-thumb {
+    border-radius: 10px;
+    -webkit-box-shadow: inset 0 0 5px rgba(0, 0, 0, 0.2);
+    background: #535353;
+}
+
+/*���������*/
+#subforms_container::-webkit-scrollbar-track {
+    -webkit-box-shadow: inset 0 0 1px rgba(0, 0, 0, 0);
+    border-radius: 10px;
+    background: #ccc;
+}
+
+#project_name_container {
+    margin-top: 116px;
+}
+
+#subform_project input {
+    height: 40px;
+    width: 214px;
+    border-radius: 4px;
+    margin: 10px;
+    border: 1px solid;
+}
+
+#subform_project label {
+    margin-left: 42px;
+    color: #1a0844;
+    font-size: 20px;
+
+}
+
+.subform input {
+    width: 152px;
+    height: 33px;
+    border: 1px;
+    margin-left: 20px;
+    border-radius: 4px;
+}
+
+.subform input:last-child {
+    width: 152px;
+    border-radius: 4px;
+}
+
+.subform button{
+    height: 33px;
+    border: 1px;
+    border-radius: 3px;
+    width: 64px;
+    margin-left: 11px;
+}
+
+.subform lable {
+    margin-left: 20px;
+    color: rgba(255, 255, 255, 0.6);
+}
+
+#search_in {
+    height: 34px;
+    margin-top: -8px;
+    border: 1px solid;
+    border-radius: 2px;
+    margin-left: -68px;
+    background: rgba(255,255,255,0.3);
+    color: white;
+    font-size: 18px;
+}
+
+#search {
+    color: white;
+    background: rgb(25,49,70);
+    height: 29px;
+    width: 68px;
+    border: 1px solid;
+    margin-top: -8px;
+}
+
+#add {
+    color: white;
+    background: rgb(25,49,70);
+    height: 36px;
+    width: 120px;
+    border: 1px solid;
+    margin-top: -8px;
+}
+
+#ssubmit {
+    color: white;
+    background: rgb(25,49,70);
+    height: 36px;
+    width: 120px;
+    border: 1px solid;
+    margin-top: -8px;
+}

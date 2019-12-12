@@ -1,0 +1,35 @@
+{% extends "layout.html" %}
+
+{% block css %}
+<style>
+    .is-hidden {
+        display: none;
+    }
+</style>
+<link rel="stylesheet" href="/static/Bootstrap-select_files/bootstrap.min.css">
+<link rel="stylesheet" href="/static/Bootstrap-select_files/bootstrap-select.css">
+<link rel="stylesheet" href="/static/content/project.css">
+{% endblock %}
+
+{% block content%}
+
+<div id="projects_container">
+    <div class="scrollbar"></div>
+</div>
+<div id="project-_-form" class="is-hidden" data-index="_">
+    <div></div>
+    <button class="show" data-id="_">查看</button>
+    <button class="remove" type="button" data-id="_">删除</button>
+</div>
+{% endblock %}
+
+{% block scripts %}
+
+<!--<script src="/static/Bootstrap-select_files/jquery.min.js.下载"></script>-->
+<script src="/static/Bootstrap-select_files/bootstrap.min.js.下载"></script>
+<script src="/static/Bootstrap-select_files/bootstrap-select.js.下载"></script>
+<script src="/static/scripts/project.js"></script>
+
+{% endblock %}
+
+

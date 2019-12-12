@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Network-Planning----graph</title>
+    <link rel="stylesheet" href="/static/content/graph.css">
+</head>
+<body style="background-image: url(../static/img/graph.jpg);
+                          background-size: 100% 100%;
+                          background-repeat: no-repeat;">
+<!-- <img src="img/network.jpg" width=100% height=100%> -->
+<canvas id="area" height="700" width="1480">
+</canvas>
+<div id="return">
+    <button onclick="turnView()">退出</button>
+</div>
+</body>
+<script type="text/javascript" src="/static/scripts/jquery.js"></script>
+<script type="text/javascript">
+
+    let canvas = document.getElementById('area');
+    let context = canvas.getContext("2d");
+    // {#let bodyY = $(document).height();#}
+    // {#let bodyX = $(document).width();#}
+    // {#$("canvas")[0].style.height = bodyY-22+"px";#}
+    // {#$("canvas")[0].style.width = bodyX-54+"px";#}
+    // {#$("#return")[0].style.marginLeft = bodyX-88+"px";#}
+    $(function () {
+        $.ajax({
+            type: 'GET',
+            url: '/getdbitem',
+            data: {project_id: parseInt(getQueryString('project_id'))},
+            dataType: 'json', // 注意：这里是指希望服务端返回json格式的数据
+            success: function (items) { // 这里的data就是json格式的数据
+                items.forEach(function (v) {
+                    console.log(v.item_X);
+                    let prearr = v.item_pre_item;
+                    items.forEach(function (n) {
+                        if (prearr.includes(n.item_name)) {
+                            if (n.item_is_key == true && v.item_is_key == true) {
+                                drawline(context, n.item_X, n.item_Y, v.item_X, v.item_Y, '#fee43e');
+                            } else {
+                                drawline(context, n.item_X, n.item_Y, v.item_X, v.item_Y, '#FFFFFF');
+                            }
+                        }
+                    });
+                    if (v.item_is_key == true) {
+                        drawStar(context, 8, Math.random(), v.item_X, v.item_Y, v.item_id, v.item_name, 2, '#fddd17', '#f6fb83');
+                    } else {
+                        drawStar(context, 8, Math.random(), v.item_X, v.item_Y, v.item_id, v.item_name, 2, '#FFFFFF', '#fffccc');
+                    }
+                });
+                canvas.addEventListener("click", function (event) {
+                    let mousePos = getMousePos(canvas, event);
+                    let mouseX = mousePos.x;
+                    let mouseY = mousePos.y;
+                    items.forEach(function (v) {
+                        let distance = Math.sqrt((mouseX - v.item_X) * (mouseX - v.item_X) + (mouseY - v.item_Y) * (mouseY - v.item_Y));
+                        if (distance <= 12) {
+                            alert("事件序号:" + v.item_id + "\n" +
+                                "事件名称:" + v.item_name + "\n" +
+                                "持续时间:" + v.item_last_time + "\n" +
+                                "最早开始时间:" + v.item_earliest_start_time + "\n" +
+                                "最早结束时间:" + v.item_earliest_finish_time + "\n" +
+                                "最晚开始时间:" + v.item_latest_start_time + "\n" +
+                                "最晚结束时间:" + v.item_latest_finish_time + "\n" +
+                                "自由时差:" + v.item_free_time_difference + "\n" +
+                                "总时差:" + v.item_total_time_difference + "\n" +
+                                "前置事件:" + v.item_pre_item + "\n" +
+                                "后继事件:" + v.item_suf_item + "\n")
+                        }
+                    });
+                });
+            },
+            error: function (xhr, type) {
+                alert('异常')
+            }
+        });
+    });
+
+    //画小星星
+    function drawStar(ctx, r, rot, X, Y, id, name, borderWidth, borderStyle, fillStyle) {
+        let R = r * 2;
+        ctx.beginPath();
+        for (let i = 0; i < 5; i++) {
+            ctx.lineTo(Math.cos((18 + 72 * i - rot) / 180 * Math.PI) * R + X, -Math.sin((18 + 72 * i - rot) / 180 * Math.PI) * R + Y);
+            ctx.lineTo(Math.cos((54 + 72 * i - rot) / 180 * Math.PI) * r + X, -Math.sin((54 + 72 * i - rot) / 180 * Math.PI) * r + Y);
+        }
+        ctx.closePath();
+
+        ctx.lineWidth = borderWidth;
+        ctx.strokeStyle = borderStyle;
+        ctx.fillStyle = fillStyle;
+        ctx.fill();
+        ctx.stroke();
+
+        ctx.font = "12px Georgia";
+        ctx.fillText(id, X - R, Y + (2 * R));
+        ctx.fillText(name, X + (0.5 * R), Y + (2 * R));
+
+    }
+
+    //画线
+    function drawline(ctx, pre_X, pre_Y, suc_X, suc_Y, color) {
+        ctx.beginPath();
+        ctx.lineTo(pre_X, pre_Y);
+        ctx.lineTo(suc_X, suc_Y);
+        ctx.closePath();
+
+        ctx.lineWidth = 2;
+        ctx.strokeStyle = color;
+        ctx.fillStyle = color;
+        ctx.fill();
+        ctx.stroke();
+
+    }
+
+    // //获取鼠标在canvas画布上的位置(而不是浏览器窗口的鼠标位置)
+    function getMousePos(canvas, event) {
+        //1
+        let rect = canvas.getBoundingClientRect();
+        //2
+        return {
+            x: event.clientX - rect.left * (canvas.width / rect.width),
+            y: event.clientY - rect.top * (canvas.height / rect.height)
+        }
+    }
+
+    function getQueryString(name) {
+        let reg = new RegExp("(^|&)" + name + "=([^&]*)(&|$)", "i");
+        let r = window.location.search.substr(1).match(reg);
+        if (r != null) return unescape(r[2]);
+        return null;
+    }
+
+    function turnView() {
+        window.location.href = "/view/?project_id=" + parseInt(getQueryString('project_id'))
+    }
+
+</script>
+</body>
+</html>
