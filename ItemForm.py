@@ -54,12 +54,6 @@ class ProjectForm(FlaskForm):
     project_ST = DateField(u'起始时间', format='%Y-%m-%d', validators=[DataRequired()])
     project_FT = DateField(u'截止时间', format='%Y-%m-%d', validators=[DataRequired(), LateThan('project_ST')])
 
-    # 名字要确保相同，验证时自动调用
-    def validate_project_name(self, project_name):
-        project = DBProject.query.filter_by(project_name=project_name.data).first()
-        if project is not None:
-            raise ValidationError('工程名重复了，请您换一个吧！')
-
 
 class LoginForm(FlaskForm):
     user_name = StringField(u'用户名', validators=[DataRequired(message='请输入用户名')])

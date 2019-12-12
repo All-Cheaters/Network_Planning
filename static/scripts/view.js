@@ -38,11 +38,6 @@ function onSearch(searchContent) {
     );
 }
 
-// function getProjectId(project_id) {
-//     return project_id
-// }
-
-
 function getQueryString(name) {
     let reg = new RegExp("(^|&)" + name + "=([^&]*)(&|$)", "i");
     let r = window.location.search.substr(1).match(reg);
@@ -67,7 +62,7 @@ $(function () {
         },
         error: function (xhr, type) {
             console.log(parseInt(getQueryString('project_id')))
-            alert('异常')
+            alert('Item数据获取异常')
         }
     });
 });

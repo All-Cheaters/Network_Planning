@@ -58,10 +58,8 @@ def new():
         return render_template('new.html', title='new', form_one=form_one)
     if request.method == 'POST':
         if not form_one.validate_on_submit():
-            print('x')
             return render_template('new.html', title='new', form_one=form_one)
         else:
-            print('√')
             tempSQLData = [[], []]
             tempProject = {'ID': DBProject.query.count(),
                            'name': form_one.project_name.data,
@@ -178,98 +176,124 @@ def view():
 def change():
     print('--------------------change--------------------')
     if request.method == 'GET':
-        project_data = {}
-        for project in DBProject.query.filter().all():
-            project_data = {
-                'project_id': project.project_id,
-                'project_name': project.project_name,
-                'project_ST': datetime.datetime.strptime(project.project_ST, '%Y-%m-%d'),
-                'project_FT': datetime.datetime.strptime(project.project_FT, '%Y-%m-%d'),
-            }
+        project = DBProject.query.filter_by(project_id=request.args.get('project_id')).first()
+        project_data = {
+            'project_id': project.project_id,
+            'project_name': project.project_name,
+            'project_ST': datetime.datetime.strptime(project.project_ST, '%Y-%m-%d'),
+            'project_FT': datetime.datetime.strptime(project.project_FT, '%Y-%m-%d'),
+        }
         form_one = ProjectForm(**project_data)
-        return render_template('change.html', title='change', form_one=form_one)
+        print('√1')
+        return render_template('change.html', project_id=request.args.get('project_id'), title='change', form_one=form_one)
     if request.method == 'POST':
-        tempSQLData = [[], []]
-        tempProject = {'ID': 0, 'name': 0, 'startTime': 0, 'finishTime': 0}
         form_one = ProjectForm()
-        # project数据库对象存储
-        project_id = DBProject.query.filter_by(project_name=form_one.project_name.data).first().project_id
-
-        tempProject['ID'] = int(project_id)
-        tempProject['name'] = form_one.project_name.data
-        tempProject['startTime'] = form_one.project_ST.data.strftime('%Y-%m-%d')
-        tempProject['finishTime'] = form_one.project_FT.data.strftime('%Y-%m-%d')
-        tempSQLData[0].append(tempProject)
-
-        # item数据库对象存储
-        DBItem.query.delete()  # 删除所有行，返回删除的行数
-        form_two = request.form.to_dict(flat=False)
-        print(form_two)
-        item_key_list = list(form_two.keys())[3:]
-        item_value_list = list(form_two.values())[3:]
-        # print(item_key_list)
-        # print(item_value_list)
-        i = 0
-        j = int(str(item_key_list[-1]).split('-')[1])
-        while i <= j:
-            item_id = i + 1
-            item_index = item_key_list.index('items-' + str(i) + '-item_name')
-            item_name = item_value_list[item_index][0]
-            item_pre = ''
-            item_LT = ''
-            if item_key_list[item_index + 1] == 'items-' + str(i) + '-item_pre':
-                for pre in item_value_list[item_index + 1]:
-                    if pre not in ['0', '无']:
-                        item_pre = item_pre + getIdByName(item_key_list, item_value_list, pre) + ' ' + pre + ','
-                item_pre = '00' if (item_pre == '') else item_pre[:-1]
-                item_LT = item_value_list[item_index + 2][0]
-            else:
-                item_pre = '00'
-                item_LT = item_value_list[item_index + 1][0]
-            i += 1
-            tempSQLData[1].append({'ID': int(item_id), 'LT': int(item_LT), 'name': item_name, 'pre': item_pre})
-
-        # 计算
-        IntoSQLFile = tempSQLData[1].copy()
-        print(IntoSQLFile)
-        tempSQLData = TranslateTempSQLData(tempSQLData)
-        tempP = Project()
-        isCircle = tempP.readDataFromSQL(tempSQLData)
-        overDue = tempP.duartion_OK()
-        tempP.graph.info()
-        print(overDue)
-        if overDue is False:
-            return render_template('change.html', title='change', form_one=form_one, overDue=overDue)
-        if isCircle is True:
-            return render_template('change.html', title='change', form_one=form_one, isCircle=isCircle)
+        if not form_one.validate_on_submit():
+            print('√2')
+            return render_template('change.html', project_id=request.args.get('project_id'), title='change', form_one=form_one)
         else:
+            tempSQLData = [[], []]
+            tempProject = {'ID': 0, 'name': 0, 'startTime': 0, 'finishTime': 0}
+            form_one = ProjectForm()
+
+            # project数据库对象存储
+            tempProject['name'] = form_one.project_name.data
+            tempProject['startTime'] = form_one.project_ST.data.strftime('%Y-%m-%d')
+            tempProject['finishTime'] = form_one.project_FT.data.strftime('%Y-%m-%d')
+            tempSQLData[0].append(tempProject)
+
+            # item数据库对象存储
+            # 先删除所有project=project_id的Items
+            delete_item_list = DBItem.query.filter_by(project=request.args.get('project_id')).all()
+            for item in delete_item_list:
+                db.session.delete(item)
+            form_two = request.form.to_dict(flat=False)
+            print(form_two)
+            item_key_list = list(form_two.keys())[3:]
+            item_value_list = list(form_two.values())[3:]
+            # print(item_key_list)
+            # print(item_value_list)
+            i = 0
+            j = int(str(item_key_list[-1]).split('-')[1])
+            while i <= j:
+                item_id = i + 1
+                item_index = item_key_list.index('items-' + str(i) + '-item_name')
+                item_name = item_value_list[item_index][0]
+                item_pre = ''
+                item_LT = ''
+                if item_key_list[item_index + 1] == 'items-' + str(i) + '-item_pre':
+                    for pre in item_value_list[item_index + 1]:
+                        if pre not in ['0', '无']:
+                            item_pre = item_pre + getIdByName(item_key_list, item_value_list, pre) + ' ' + pre + ','
+                    item_pre = '00' if (item_pre == '') else item_pre[:-1]
+                    item_LT = item_value_list[item_index + 2][0]
+                else:
+                    item_pre = '00'
+                    item_LT = item_value_list[item_index + 1][0]
+                i += 1
+                tempSQLData[1].append({'ID': int(item_id), 'LT': int(item_LT), 'name': item_name, 'pre': item_pre})
+
+            # 计算
             p = Project()
-            p.readDataFromSQL(tempSQLData)
+            tempSQLData = TranslateTempSQLData(tempSQLData)
+            isCircle = p.readDataFromSQL(tempSQLData)
+            overDue = p.duartion_OK()
             p.graph.info()
-            try:
+            print(overDue)
+            if overDue is False:
+                print('√3')
+                return render_template('change.html', project_id=request.args.get('project_id'), title='change',
+                                       form_one=form_one, overDue=overDue)
+            if isCircle is True:
+                print('√4')
+                return render_template('change.html', project_id=request.args.get('project_id'), title='change',
+                                       form_one=form_one, isCircle=isCircle)
+            else:
                 # 更新DBProject数据库数据
-                DBProject.query.filter_by(project_name=form_one.project_name.data).update(
+                DBProject.query.filter_by(project_id=request.args.get('project_id')).update(
                     {"project_name": form_one.project_name.data,
                      "project_ST": form_one.project_ST.data,
                      "project_FT": form_one.project_FT.data})
-                for itemDict in IntoSQLFile:
-                    db_item = DBItem(item_id=itemDict['ID'],
-                                     item_name=itemDict['name'],
-                                     item_pre=itemDict['pre'],
-                                     item_LT=itemDict['LT'])
+                for Knot in p.graph.knotList:
+                    pre_item = ''
+                    suf_item = ''
+                    for pre in Knot.pre_item:
+                        pre_item += pre
+                        pre_item += ','
+                    for suf in Knot.suf_item:
+                        suf_item += suf
+                        suf_item += ','
+                    db_item = DBItem(item_name=Knot.name,
+                                     item_pre_item=pre_item[:-1],
+                                     item_suf_item=suf_item[:-1],
+                                     item_last_time=Knot.last_time,
+                                     item_earliest_start_time=Knot.earliest_start_time.strftime('%Y-%m-%d'),
+                                     item_earliest_finish_time=Knot.earliest_finish_time.strftime('%Y-%m-%d'),
+                                     item_latest_start_time=Knot.latest_start_time.strftime('%Y-%m-%d'),
+                                     item_latest_finish_time=Knot.latest_finish_time.strftime('%Y-%m-%d'),
+                                     item_free_time_difference=Knot.free_time_difference,
+                                     item_total_time_difference=Knot.total_time_difference,
+                                     item_X=Knot.X,
+                                     item_Y=Knot.Y,
+                                     item_is_key=Knot.is_key,
+                                     item_toPoID=Knot.toPoID,
+                                     project=request.args.get('project_id'))
+                    print(db_item)
                     db.session.add(db_item)
-                db.session.commit()
-                print('成功提交')
-            except Exception as e:
-                db.session.rollback()
-                print('提交失败')
-                print(e)
-            projectInfo = ProjectForm()
-            projectInfo.project_id = 1
-            projectInfo.project_name = form_one.project_name.data
-            projectInfo.project_ST = form_one.project_ST.data
-            projectInfo.project_FT = form_one.project_FT.data
-            return render_template('view.html', title='view', projectInfo=projectInfo)
+                try:
+                    db.session.commit()
+                    print('成功提交')
+                except Exception as e:
+                    db.session.rollback()
+                    print('提交失败')
+                    print(e)
+                projectInfo = ProjectForm()
+                projectInfo.project_id = request.args.get('project_id')
+                projectInfo.project_name = form_one.project_name.data
+                projectInfo.project_ST = form_one.project_ST.data
+                projectInfo.project_FT = form_one.project_FT.data
+                print('√5')
+                return render_template('view.html', project_id=request.args.get('project_id'), title='view', projectInfo=projectInfo)
 
 
 @app.route('/graph/')

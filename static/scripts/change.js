@@ -328,22 +328,28 @@ function onSearch(searchContent) {
     });
 }
 
-$(document).ready(function () {
+function getQueryString(name) {
+    let reg = new RegExp("(^|&)" + name + "=([^&]*)(&|$)", "i");
+    let r = window.location.search.substr(1).match(reg);
+    if (r != null) return unescape(r[2]);
+    return null;
+}
 
+$(document).ready(function () {
     $(function () {
         // 获取item_json
         $.ajax({
             type: 'GET',
-            url: '/getpyitem',
-            data: {"object": "item"},
+            url: '/getdbitem',
+            data: {project_id: parseInt(getQueryString('project_id'))},
             dataType: 'json', // 注意：这里是指希望服务端返回json格式的数据
             success: function (items) { // 这里的data就是json格式的数据
                 let allvalue = [];
                 items.forEach(function(v){
-                    allvalue.push(v.name);
+                    allvalue.push(v.item_name);
                 });
                 items.forEach(function (v) {
-                    addEle(v.name, allvalue, v.pre_item, v.last_time);
+                    addEle(v.item_name, allvalue, v.item_pre_item, v.item_last_time);
                 });
                 let $ExistForm = $('.subform');
                 $ExistForm.find('select').each(function () {
@@ -360,7 +366,7 @@ $(document).ready(function () {
                 });
             },
             error: function (xhr, type) {
-                alert('异常')
+                alert('Item数据获取异常')
             }
         });
     });
