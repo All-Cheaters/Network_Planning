@@ -48,9 +48,14 @@ input.input-validation-error {
 }
 
 #name {
-    font-size: 20px;
+    font-size: 34px;
     margin-top: 11px;
-    margin-left: 10px;
+    margin-left: 16px;
+}
+
+#greet{
+    font-size: 20px;
+    margin-left: 16px;
 }
 
 #add_img {
@@ -72,7 +77,7 @@ input.input-validation-error {
 }
 
 #star_img {
-    margin-top: 180px;
+    margin-top: 198px;
     margin-left: 218px;
     width: 28px;
     height: 28px;
@@ -223,7 +228,7 @@ ul ul a {
 #out_container {
     position: absolute;
     z-index: 101;
-    margin-top: 182px;
+    margin-top: 200px;
     margin-left: 4px;
 }
 

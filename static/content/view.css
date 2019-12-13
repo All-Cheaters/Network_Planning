@@ -4,10 +4,10 @@
 
 table {
     width: 90%;
-    height: 550px;
+    height: 510px;
     background: #ccc;
     margin: 10px auto;
-    border-collapse: collapse; /*border-collapse:collapse�ϲ�����߾�(ȥ�����Ԫ��Ĭ�ϵ�2����������߾�*/
+    border-collapse: collapse;
 }
 
 th, td {
@@ -36,7 +36,7 @@ tr {
 
 tbody {
     display: block;
-    height: 492px;
+    height: 476px;
     overflow-y: scroll;
 }
 
@@ -75,20 +75,35 @@ table thead {
 }
 
 #change {
-    z-index: 0;
     position: absolute;
+    z-index: 1;
+    margin-top: 16px;
+    margin-left: 828px;
 }
 
 #graph {
-    z-index: 1;
     position: absolute;
-    margin-left: 1012px;
+    z-index: 1;
+    margin-top: 16px;
+    margin-left: 992px;
 }
 
-button {
-    border-radius: 2px;
-    border: 1px;
-    background: rgba(255, 255, 255, 0.8);
+#change_button {
+    color: white;
+    background: rgb(25,49,70);
+    height: 36px;
+    width: 120px;
+    border: 1px solid;
+    margin-top: -8px;
+}
+
+#graph_button {
+    color: white;
+    background: rgb(25,49,70);
+    height: 36px;
+    width: 148px;
+    border: 1px solid;
+    margin-top: -8px;
 }
 
 #project_name_container{
@@ -108,9 +123,27 @@ button {
     margin-left: 260px;
 }
 
-#search_container{
+#search_container {
     position: absolute;
     z-index: 1;
-    margin-left: 854px;
+}
+
+#search_in {
+    height: 34px;
+    margin-top: -6px;
+    border: 1px solid;
+    border-radius: 2px;
+    margin-left: 852px;
+    background: rgba(255,255,255,0.3);
+    color: white;
+    font-size: 18px;
+}
+
+#search {
+    color: white;
+    background: rgb(25,49,70);
+    height: 29px;
+    width: 68px;
+    border: 1px solid;
     margin-top: -8px;
 }

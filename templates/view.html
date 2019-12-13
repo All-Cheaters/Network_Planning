@@ -49,10 +49,10 @@
 </div>
 
 <div id="change">
-    <button onclick='window.location.href="/change/?project_id=" + {{projectInfo.project_id}} '>启用编辑</button>
+    <button id="change_button" onclick='window.location.href="/change/?project_id=" + {{projectInfo.project_id}} '>启用编辑</button>
 </div>
 <div id="graph">
-    <button onclick='window.location.href="/graph/?project_id=" + {{projectInfo.project_id}} '>绘制单计划网络图</button>
+    <button id="graph_button" onclick='window.location.href="/graph/?project_id=" + {{projectInfo.project_id}} '>绘制单计划网络图</button>
 </div>
 {% endblock %}
 

@@ -25,9 +25,9 @@
         <div class="sidebar-header">
             <h3>导航栏</h3>
         </div>
-        <div>
-            <img id="head_image" src="../static/img/head.jpg">
-            <span id="name">All Cheaters</span>
+        <div id="name_container">
+            <span id="name">Hi    {{current_user.user_name}}</span>
+            <div id="greet"></div>
         </div>
 
         <ul class="list-unstyled components">
@@ -82,7 +82,44 @@
 <script type="text/javascript">
     {#let Y = $(document).height()-2+"px";#}
     {#$("body")[0].style.height = Y;#}
+    let date = new Date();
+    let nowHour = date.getHours();
     $(document).ready(function () {
+        console.log(nowHour);
+        switch (nowHour) {
+            case 5:
+            case 6:
+            case 7:$('#greet').html("早上好呀");
+            break;
+            case 8:
+            case 9:
+            case 10:$('#greet').html("上午好呀");
+            break;
+            case 11:
+            case 12:
+            case 13:$('#greet').html("中午好呀");
+            break;
+            case 14:
+            case 15:
+            case 16:
+            case 17:
+            case 18:$('#greet').html("下午好呀");
+            break;
+            case 19:
+            case 20:
+            case 21:
+            case 22:$('#greet').html("晚上好呀");
+            break;
+            case 23:
+            case 0:$('#greet').html("晚上好呀");
+            break;
+            case 1:
+            case 2:
+            case 3:
+            case 4:$('#greet').html("求求你，别肝啦");
+            break;
+        }
+
         $("#sidebar").mCustomScrollbar({
             theme: "minimal"
         });
