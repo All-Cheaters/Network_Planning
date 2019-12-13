@@ -48,21 +48,57 @@ class CheckPassword(object):
             raise ValidationError(message % d)
 
 
-class ProjectForm(FlaskForm):
-    project_id = HiddenField(u'项目ID')
-    project_name = StringField(u'工程名称', render_kw={"placeholder": "项目名称"})
-    project_ST = DateField(u'起始时间', format='%Y-%m-%d', validators=[DataRequired()], render_kw={"placeholder": "开始时间"})
-    project_FT = DateField(u'截止时间', format='%Y-%m-%d', validators=[DataRequired()], render_kw={"placeholder": "截止时间"}) #, LateThan('project_ST')]
+class CheckProjectName(object):
+    def __init__(self, fieldname, message=None):
+        self.fieldname = fieldname
+        self.message = message
 
-    def validate_project_name(self, project_name):
-        project = DBProject.query.filter_by(project_name=project_name.data).first()
-        if project is not None:
-            raise ValidationError('项目名重复了，请您换一个吧!')
+    def __call__(self, form, field):
+        try:
+            other = form[self.fieldname]
+            print(other.data)
+        except KeyError:
+            raise ValidationError(field.gettext(u'不能修改项目名哦!'))
+        # if field.data != other.data:  # --> Change to >= from !=
+        if str(field.data) == 'None':
+            project = DBProject.query.filter_by(project_name=other.data).first()
+            if project is not None:
+                d = {'other_label': hasattr(other, 'label') and other.label.text or self.fieldname,
+                     'other_name': self.fieldname}
+                message = self.message
+                if message is None:
+                    message = field.gettext(u'项目名重复了，请您换一个吧!')
+                raise ValidationError(message % d)
+        else:
+            project = DBProject.query.filter_by(project_id=field.data).first()
+            print(project.project_name)
+            print(other.data)
+            if other.data != project.project_name:
+                d = {'other_label': hasattr(other, 'label') and other.label.text or self.fieldname,
+                     'other_name': self.fieldname}
+                message = self.message
+                if message is None:
+                    message = field.gettext(u'不能修改项目名哦!')
+                raise ValidationError(message % d)
+
+
+class ProjectForm(FlaskForm):
+    project_id = HiddenField(u'项目ID', validators=[CheckProjectName('project_name')])
+    project_name = StringField(u'项目名称', render_kw={"placeholder": "项目名称"})
+    project_ST = DateField(u'起始时间', format='%Y-%m-%d', validators=[DataRequired()], render_kw={"placeholder": "开始时间"})
+    project_FT = DateField(u'截止时间', format='%Y-%m-%d', validators=[DataRequired()],
+                           render_kw={"placeholder": "截止时间"})  # , LateThan('project_ST')]
+
+    # def validate_project_name(self, project_name):
+    #     project = DBProject.query.filter_by(project_name=project_name.data).first()
+    #     if project is not None:
+    #         raise ValidationError('项目名重复了，请您换一个吧!')
 
 
 class LoginForm(FlaskForm):
     user_name = StringField(u'用户名', validators=[DataRequired(message='请输入用户名')], render_kw={"placeholder": "账号"})
-    user_password = PasswordField(u'用户密码', validators=[DataRequired(message='请输入密码'), CheckPassword('user_name')], render_kw={"placeholder": "密码"})
+    user_password = PasswordField(u'用户密码', validators=[DataRequired(message='请输入密码'), CheckPassword('user_name')],
+                                  render_kw={"placeholder": "密码"})
     remember_me = BooleanField(u'记住我')
     submit = SubmitField(u'登录')
 
@@ -73,9 +109,10 @@ class LoginForm(FlaskForm):
 
 
 class RegisterForm(FlaskForm):
-    user_name = StringField(u'用户名', validators=[DataRequired(message='请输入用户名')],render_kw={"placeholder": "账号"})
-    user_password = PasswordField(u'用户密码', validators=[DataRequired(message='请输入密码')],render_kw={"placeholder": "密码"})
-    user_password2 = PasswordField(u'确认密码', validators=[DataRequired(), EqualTo('user_password')],render_kw={"placeholder": "确认密码"})
+    user_name = StringField(u'用户名', validators=[DataRequired(message='请输入用户名')], render_kw={"placeholder": "账号"})
+    user_password = PasswordField(u'用户密码', validators=[DataRequired(message='请输入密码')], render_kw={"placeholder": "密码"})
+    user_password2 = PasswordField(u'确认密码', validators=[DataRequired(), EqualTo('user_password')],
+                                   render_kw={"placeholder": "确认密码"})
     submit = SubmitField(u'注册')
 
     def validate_user_name(self, user_name):

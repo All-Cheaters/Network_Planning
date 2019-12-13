@@ -34,6 +34,7 @@
         <div id="subform_project">
             <div id="project_name_container">
                 {{form_one.csrf_token}}
+                {{form_one.project_id(value=request.args.get('project_id'))}}
                 {{ form_one.project_name.label }}
                 {{ form_one.project_name }}
                 {% for error in form_one.project_name.errors %}

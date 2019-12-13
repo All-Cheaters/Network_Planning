@@ -185,12 +185,14 @@ def change():
         }
         form_one = ProjectForm(**project_data)
         print('√1')
-        return render_template('change.html', project_id=request.args.get('project_id'), title='change', form_one=form_one)
+        return render_template('change.html', project_id=request.args.get('project_id'), title='change',
+                               form_one=form_one)
     if request.method == 'POST':
         form_one = ProjectForm()
         if not form_one.validate_on_submit():
             print('√2')
-            return render_template('change.html', project_id=request.args.get('project_id'), title='change', form_one=form_one)
+            return render_template('change.html', project_id=request.args.get('project_id'), title='change',
+                                   form_one=form_one)
         else:
             tempSQLData = [[], []]
             tempProject = {'ID': 0, 'name': 0, 'startTime': 0, 'finishTime': 0}
@@ -293,7 +295,8 @@ def change():
                 projectInfo.project_ST = form_one.project_ST.data
                 projectInfo.project_FT = form_one.project_FT.data
                 print('√5')
-                return render_template('view.html', project_id=request.args.get('project_id'), title='view', projectInfo=projectInfo)
+                return render_template('view.html', project_id=request.args.get('project_id'), title='view',
+                                       projectInfo=projectInfo)
 
 
 @app.route('/graph/')
@@ -415,16 +418,6 @@ def TranslateToSQLData():  # 只能读一个项目
 
 
 if __name__ == '__main__':
-    # 在创建数据库表单之前要先删除表单
     # db.drop_all()
-    # 创建数据库表单
     # db.create_all()
-    # 全局变量工程，储存计算节点
-    # p = Project()
-    # SQLData = TranslateToSQLData()
-    # p.readDataFromSQL(SQLData)
-    # p.graph.calculateCoordinates([1480, 400])
-    # p.graph.info()
-    # 通过view()函数在控制台打印数据库数据，不用管报错，这是最后一行往前端传数据的错，回头再解决
-    # view()
     app.run(port=5000, debug=True)
