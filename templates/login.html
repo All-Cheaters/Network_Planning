@@ -17,20 +17,24 @@
         {{loginform.user_name}}
         {% for error in loginform.user_name.errors %}
         <span style="color: rgb(227, 228, 140);">{{ error }}</span>
-{#            <div class="alert alert-{{ error }}" role="alert">#}
-        {% endfor %}
+        {#
+        <div class="alert alert-{{ error }}" role="alert">#}
+            {% endfor %}
+        </div>
+        <div>
+            {{loginform.user_password}}
+            {% for error in loginform.user_password.errors %}
+            <span style="color: rgb(227, 228, 140);">{{ error }}</span>
+            {#
+            <div class="alert alert-{{ error }}" role="alert">#}
+                {% endfor %}
+            </div>
+            <p>{{ loginform.submit() }}</p>
+            <div id="register">
+                <button onclick='window.location.href="/register" '>注册</button>
+            </div>
+        </div>
     </div>
-    <div>
-        {{loginform.user_password}}
-        {% for error in loginform.user_password.errors %}
-        <span style="color: rgb(227, 228, 140);">{{ error }}</span>
-{#            <div class="alert alert-{{ error }}" role="alert">#}
-        {% endfor %}
-    </div>
-    <p>{{ loginform.submit() }}</p>
-    <div id="register">
-    <button onclick='window.location.href="/register" '>注册</button>
-</div>
 </form>
 
 <script src="/static/scripts/jquery.js"></script>

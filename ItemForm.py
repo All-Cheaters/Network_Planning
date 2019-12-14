@@ -103,7 +103,7 @@ class LoginForm(FlaskForm):
     def validate_user_name(self, user_name):
         user = DBUser.query.filter_by(user_name=user_name.data).first()
         if user is None:
-            raise ValidationError('用户名不存在!')
+            raise ValidationError(u'用户名不存在!')
 
 
 class RegisterForm(FlaskForm):
@@ -116,4 +116,4 @@ class RegisterForm(FlaskForm):
     def validate_user_name(self, user_name):
         user = DBUser.query.filter_by(user_name=user_name.data).first()
         if user is not None:
-            raise ValidationError('用户名重复了，请您换一个吧!')
+            raise ValidationError(u'用户名重复了，请您换一个吧!')
