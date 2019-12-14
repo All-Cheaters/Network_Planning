@@ -60,8 +60,8 @@ class CheckProjectName(object):
         except KeyError:
             raise ValidationError(field.gettext(u'不能修改项目名哦!'))
         # if field.data != other.data:  # --> Change to >= from !=
-        if str(field.data) == 'None':
-            project = DBProject.query.filter_by(project_name=other.data).first()
+        if str(other.data) == 'None':
+            project = DBProject.query.filter_by(project_name=field.data).first()
             if project is not None:
                 d = {'other_label': hasattr(other, 'label') and other.label.text or self.fieldname,
                      'other_name': self.fieldname}
@@ -70,10 +70,8 @@ class CheckProjectName(object):
                     message = field.gettext(u'项目名重复了，请您换一个吧!')
                 raise ValidationError(message % d)
         else:
-            project = DBProject.query.filter_by(project_id=field.data).first()
-            print(project.project_name)
-            print(other.data)
-            if other.data != project.project_name:
+            project = DBProject.query.filter_by(project_id=other.data).first()
+            if field.data != project.project_name:
                 d = {'other_label': hasattr(other, 'label') and other.label.text or self.fieldname,
                      'other_name': self.fieldname}
                 message = self.message
@@ -83,8 +81,8 @@ class CheckProjectName(object):
 
 
 class ProjectForm(FlaskForm):
-    project_id = HiddenField(u'项目ID', validators=[CheckProjectName('project_name')])
-    project_name = StringField(u'项目名称', render_kw={"placeholder": "项目名称"})
+    project_id = HiddenField(u'项目ID')
+    project_name = StringField(u'项目名称', validators=[CheckProjectName('project_id')], render_kw={"placeholder": "项目名称"})
     project_ST = DateField(u'起始时间', format='%Y-%m-%d', validators=[DataRequired()], render_kw={"placeholder": "开始时间"})
     project_FT = DateField(u'截止时间', format='%Y-%m-%d', validators=[DataRequired()],
                            render_kw={"placeholder": "截止时间"})  # , LateThan('project_ST')]
