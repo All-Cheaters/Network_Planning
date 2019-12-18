@@ -58,10 +58,10 @@ class DBProject(db.Model):
     items = db.relationship('DBItem', backref='DBProject', lazy='dynamic')
 
     def __repr__(self):
-        return str({'ID': self.project_id,
-                    'name': self.project_name,
-                    'startTime': self.project_ST,
-                    'finishTime': self.project_FT,
+        return str({'project_id': self.project_id,
+                    'project_name': self.project_name,
+                    'project_ST': self.project_ST,
+                    'project_FT': self.project_FT,
                     'user': self.user,
                     'items': self.items})
 
@@ -93,21 +93,21 @@ class DBItem(db.Model):
     project = db.Column(db.Integer, db.ForeignKey('DBProject.project_id'), nullable=False)
 
     def __repr__(self):
-        return str({'ID': self.item_id,
-                    'name': self.item_name,
-                    'pre_item': self.item_pre_item,
-                    'suf_item': self.item_suf_item,
-                    'last_time': self.item_last_time,
-                    'earliest_start_time': self.item_earliest_start_time,
-                    'earliest_finish_time': self.item_earliest_finish_time,
-                    'latest_start_time': self.item_last_time,
-                    'latest_finish_time': self.item_latest_finish_time,
-                    'free_time_difference': self.item_free_time_difference,
-                    'total_time_difference': self.item_total_time_difference,
-                    'X': self.item_X,
-                    'Y': self.item_Y,
-                    'is_key': self.item_is_key,
-                    'toPoID': self.item_toPoID,
+        return str({'item_id': self.item_id,
+                    'item_name': self.item_name,
+                    'item_pre_item': self.item_pre_item,
+                    'item_suf_item': self.item_suf_item,
+                    'item_last_time': self.item_last_time,
+                    'item_earliest_start_time': self.item_earliest_start_time,
+                    'item_earliest_finish_time': self.item_earliest_finish_time,
+                    'item_latest_start_time': self.item_latest_start_time,
+                    'item_latest_finish_time': self.item_latest_finish_time,
+                    'item_free_time_difference': self.item_free_time_difference,
+                    'item_total_time_difference': self.item_total_time_difference,
+                    'item_X': self.item_X,
+                    'item_Y': self.item_Y,
+                    'item_is_key': self.item_is_key,
+                    'item_toPoID': self.item_toPoID,
                     'project': self.project})
 
     def serialize_instance(self):

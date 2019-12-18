@@ -115,6 +115,10 @@ def new():
                     print(db_project)
                     db.session.add(db_project)
                     # item数据库对象存储
+                    max_id = db.session.query(db.func.max(DBProject.project_id)).scalar()
+                    item_project_id = db.session.query(DBProject).filter(
+                        DBProject.project_id == max_id).first().project_id  # 若有多个相同值用all()
+                    print(item_project_id)
                     for Knot in p.graph.knotList:
                         pre_item = ''
                         suf_item = ''
@@ -138,7 +142,7 @@ def new():
                                          item_Y=Knot.Y,
                                          item_is_key=Knot.is_key,
                                          item_toPoID=Knot.toPoID,
-                                         project=DBProject.query.count())
+                                         project=item_project_id)
                         print(db_item)
                         db.session.add(db_item)
             else:
