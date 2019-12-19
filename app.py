@@ -179,8 +179,10 @@ def view():
     project = DBProject.query.filter_by(project_id=request.args.get('project_id')).first()
     projectInfo.project_id = project.project_id
     projectInfo.project_name = project.project_name
-    projectInfo.project_ST = datetime.datetime.strptime(project.project_ST, '%Y-%m-%d')
-    projectInfo.project_FT = datetime.datetime.strptime(project.project_FT, '%Y-%m-%d')
+    getproject_ST = datetime.datetime.strptime(project.project_ST, '%Y-%m-%d')
+    projectInfo.project_ST =getproject_ST.strftime('%Y-%m-%d')
+    getproject_FT = datetime.datetime.strptime(project.project_FT, '%Y-%m-%d')
+    projectInfo.project_FT = getproject_FT.strftime('%Y-%m-%d')
     return render_template('view.html', title='view', projectInfo=projectInfo)
 
 
@@ -197,13 +199,13 @@ def change():
             'project_FT': datetime.datetime.strptime(project.project_FT, '%Y-%m-%d'),
         }
         form_one = ProjectForm(**project_data)
-        print('√1')
+        # print('√1')
         return render_template('change.html', project_id=request.args.get('project_id'), title='change',
                                form_one=form_one)
     if request.method == 'POST':
         form_one = ProjectForm()
         if not form_one.validate_on_submit():
-            print('√2')
+            # print('√2')
             return render_template('change.html', project_id=request.args.get('project_id'), title='change',
                                    form_one=form_one)
         else:
@@ -257,11 +259,11 @@ def change():
                 p.graph.info()
                 print(overDue)
                 if overDue is False:
-                    print('√3')
+                    # print('√3')
                     return render_template('change.html', project_id=request.args.get('project_id'), title='change',
                                            form_one=form_one, overDue=overDue)
                 if isCircle is True:
-                    print('√4')
+                    # print('√4')
                     return render_template('change.html', project_id=request.args.get('project_id'), title='change',
                                            form_one=form_one, isCircle=isCircle)
                 else:
@@ -310,13 +312,12 @@ def change():
             except Exception as e:
                 db.session.rollback()
                 print('提交失败')
-                print(e)
             projectInfo = ProjectForm()
             projectInfo.project_id = request.args.get('project_id')
             projectInfo.project_name = form_one.project_name.data
             projectInfo.project_ST = form_one.project_ST.data
             projectInfo.project_FT = form_one.project_FT.data
-            print('√5')
+            # print('√5')
             return render_template('view.html', project_id=request.args.get('project_id'), title='view',
                                    projectInfo=projectInfo)
 

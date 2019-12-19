@@ -134,10 +134,10 @@ label {
     margin-top: -8px;
     border: 1px solid;
     border-radius: 2px;
-    margin-left: -68px;
+    margin-left: -42px;
     background: rgba(255,255,255,0.3);
     color: white;
-    font-size: 18px;
+    font-size: 16px;
 }
 
 #search {
@@ -166,3 +166,10 @@ label {
     border: 1px solid;
     margin-top: -8px;
 }
+
+input::-webkit-input-placeholder {
+        color: #FFFFFF;
+      }
+      input::-ms-input-placeholder {
+        color: #FFFFFF;
+      }

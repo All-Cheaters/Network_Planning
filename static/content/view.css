@@ -136,7 +136,7 @@ table thead {
     margin-left: 852px;
     background: rgba(255,255,255,0.3);
     color: white;
-    font-size: 18px;
+    font-size: 16px;
 }
 
 #search {
@@ -147,3 +147,10 @@ table thead {
     border: 1px solid;
     margin-top: -8px;
 }
+
+input::-webkit-input-placeholder {
+        color: #FFFFFF;
+      }
+      input::-ms-input-placeholder {
+        color: #FFFFFF;
+      }
