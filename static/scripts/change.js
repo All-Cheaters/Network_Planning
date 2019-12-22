@@ -175,6 +175,7 @@ function addEle(name, allvalue, pre_item, last_time) {
         $item.attr('name', $item.attr('name').replace('_', newIndex));
         $item.attr('data-id', $item.attr('data-id').replace('_', newIndex));
         let value = pre_item;
+        console.log(value);
         if (pre_item != "无") {
             $item.append("<option value='0'>无</option>");
             for (let i = 0; i < allvalue.length; i++) {
@@ -348,12 +349,13 @@ $(document).ready(function () {
                     allvalue.push(v.item_name);
                 });
                 items.forEach(function (v) {
-                    addEle(v.item_name, allvalue, v.item_pre_item, v.item_last_time);
+                    let pre_item = [];
+                    pre_item = v.item_pre_item.split(",");
+                    addEle(v.item_name, allvalue, pre_item, v.item_last_time);
                 });
                 let $ExistForm = $('.subform');
                 $ExistForm.find('select').each(function () {
                 let keyvalue = $('#' + "items-" + $(this).attr("data-id") + "-item_name").val();
-                console.log(keyvalue);
                 let optall = $('#' + "items-" + $(this).attr("data-id") + "-item_pre")[0].options;
                     for (let i = 0; i < optall.length; i++) {
                         if (optall[i].value == keyvalue) {

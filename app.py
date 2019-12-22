@@ -441,6 +441,6 @@ def TranslateToSQLData():  # 只能读一个项目
 
 
 if __name__ == '__main__':
-    # db.drop_all()
-    # db.create_all()
+    db.drop_all()
+    db.create_all()
     app.run(port=5000, debug=True)
